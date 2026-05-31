@@ -1,87 +1,94 @@
 <p align="center">
-  <img src="web/static/logo.webp" alt="Logo LiberDom" width="120" height="120" style="border-radius: 20px;">
+  <img src="web/static/logo.webp" alt="Logo LiberDom" width="130" height="130" style="border-radius: 26px; box-shadow: 0 10px 30px rgba(0, 230, 118, 0.25);">
 </p>
 
-# 🔎 LiberDom - Detector & Buscador de Dominios para Termux 🚀
+<h1 align="center">🔎 LiberDom</h1>
+<p align="center">
+  <strong>El detector y buscador de dominios híbrido ultrarrápido diseñado para Termux y la Web.</strong>
+</p>
 
-[![Termux Support](https://img.shields.io/badge/Platform-Termux%20%7C%20Linux-green?style=for-the-badge&logo=android)](https://termux.com/)
-[![Python Version](https://img.shields.io/badge/Python-3.7+-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![Language](https://img.shields.io/badge/Idioma-Espa%C3%B1ol%20%F0%9F%87%AA%F0%9F%87%B8-red?style=for-the-badge)](README.md)
-[![License](https://img.shields.io/badge/Licencia-MIT-brightgreen?style=for-the-badge)](LICENSE)
-
-**LiberDom** es una herramienta en consola diseñada y optimizada especialmente para **Termux** y sistemas Linux. Permite verificar de manera instantánea si un dominio de internet está disponible para comprar o si ya tiene dueño (comprado). 
-¡Perfecto para desarrolladores, emprendedores y sysadmins que necesitan buscar nombres rápidos para sus proyectos directamente desde su celular o terminal portátil! 📱💻
-
----
-
-## 🌟 Características Destacadas
-
-*   ⚡ **Búsqueda Híbrida Inteligente:** Combina una resolución DNS ultrarrápida junto con un cliente WHOIS puro recursivo a nivel de sockets TCP.
-*   📦 **Sin Dependencias (Zero-Dependency):** Escrito completamente en Python estándar. **No requiere instalar molestos paquetes pip ni librerías C extras** que suelen fallar en Termux. ¡Funciona al instante!
-*   🌍 **Soporte de TLDs Mundial:** Soporte de dominios globales (`.com`, `.net`, `.org`), dominios modernos (`.io`, `.co`, `.dev`) y dominios regionales de habla hispana (`.es`, `.mx`, `.cl`, `.ar`, `.pe`, `.co`, etc.).
-*   🎨 **Interfaz Visual Premium:** Colores vivos ANSI adaptados para Termux, barra de carga animada (spinner) y emojis interactivos.
-*   📂 **Búsqueda por Lote:** Analiza dominios cargando un archivo `.txt` o **pegando el texto directamente en la consola** (separados por comas, espacios o saltos de línea).
-*   💡 **Generador Creativo:** Introduce una palabra clave y el script generará ideas combinando prefijos, sufijos y extensiones, comprobando la disponibilidad de todas ellas en tiempo real.
+<p align="center">
+  <a href="https://termux.com/"><img src="https://img.shields.io/badge/Platform-Termux%20%7C%20Linux-00e676?style=flat-square&logo=android&logoColor=white" alt="Platform"></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.7+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-8b5cf6?style=flat-square" alt="License"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/Idioma-Espa%C3%B1ol%20%F0%9F%87%AA%F0%9F%87%B8-ff1744?style=flat-square" alt="Language"></a>
+</p>
 
 ---
 
-## 📥 Instalación Rápida en Termux
+> [!TIP]
+> **LiberDom** es una herramienta de código abierto en español para comprobar disponibilidad de dominios en milisegundos. Combina consultas DNS ultrarrápidas y sockets TCP recursivos de bajo nivel a bases de datos mundiales de WHOIS (puerto 43), **100% libre de APIs de pago o cuotas de terceros**.
 
-Para instalar todas las dependencias y dejar la herramienta configurada con comando de acceso directo, abre tu aplicación **Termux** y copia y pega la siguiente línea de comandos:
+---
+
+## 🌟 Características Clave
+
+*   ⚡ **Búsqueda Híbrida Inteligente:** Primero realiza una resolución DNS en milisegundos (infinitas consultas y sin límites). Si no hay IP activa, cae automáticamente en un cliente WHOIS puro de bajo nivel para verificar si está comprado o libre.
+*   📦 **Sin Dependencias (Zero-Dependency):** Escrito en Python nativo puro. Olvídate de instalar pesadas dependencias pip o compiladores C que suelen fallar en Termux. ¡Funciona desde el primer segundo!
+*   🌍 **Cliente WHOIS Recursivo Mundial:** Capacidad de consultar `whois.iana.org` dinámicamente y redirigir la consulta al servidor de registro correspondiente de cualquier TLD regional (`.es`, `.mx`, `.pe`, `.cl`, `.ar`, etc.) o global (`.com`, `.net`, `.org`, `.io`, `.co`).
+*   🎨 **Estética de Consola Premium:** Banner Matrix dinámico, colores ANSI vivos y spinner de carga diseñado para brillar en la terminal de Termux.
+*   📂 **Escáner Masivo Avanzado (Lotes):** Carga listas de dominios desde un archivo `.txt` o **pega texto libre directamente en la pantalla** (copiado de WhatsApp o webs). El script limpia protocolos (`http/https`), subdominios (`www`) y elimina duplicados automáticamente.
+*   💡 **Generador Creativo de Ideas:** Introduce una palabra clave y genera combinaciones con múltiples prefijos y sufijos, comprobando su disponibilidad en tiempo real.
+
+---
+
+## 📥 Instalación en Termux
+
+Abre tu aplicación **Termux** y ejecuta esta única línea de comandos para instalar dependencias y configurar el acceso directo de forma automática:
 
 ```bash
 pkg install git -y && git clone https://github.com/NeoTurcios/liberdom.git && cd liberdom && chmod +x install.sh && ./install.sh
 ```
 
-*(Nota: Asegúrate de cambiar `TU_USUARIO` por tu usuario de GitHub una vez crees el repositorio público).*
+<details>
+<summary>💡 Ver instalación manual paso a paso</summary>
+<br>
 
-### Instalación Manual (Paso a Paso)
+Si prefieres inicializar cada componente manualmente:
 
-Si prefieres hacerlo de forma individual, ejecuta:
-
-1. **Actualizar el sistema de Termux:**
+1. **Actualiza los repositorios de tu terminal Android:**
    ```bash
    pkg update && pkg upgrade -y
    ```
-2. **Instalar Python y Git:**
+2. **Instala Git y Python 3:**
    ```bash
-   pkg install python git -y
+   pkg install python git dnsutils -y
    ```
-3. **Clonar este repositorio:**
+3. **Clona este repositorio en tu almacenamiento local:**
    ```bash
    git clone https://github.com/NeoTurcios/liberdom.git
    cd liberdom
    ```
-4. **Dar permisos de ejecución e instalar:**
+4. **Configura permisos y ejecuta el instalador del alias:**
    ```bash
    chmod +x install.sh
    ./install.sh
    ```
+</details>
 
 ---
 
-## 🎮 Modo de Uso
+## 🎮 Modo de Uso (CLI)
 
-Una vez instalado, inicia la aplicación simplemente escribiendo:
+Una vez completada la instalación, puedes abrir la herramienta desde cualquier directorio de Termux escribiendo:
 
 ```bash
 liberdom
 ```
 
-*(O de forma directa en la carpeta con `./liberdom.py`)*
+*(O ejecutando directamente en la carpeta: `./liberdom.py`)*
 
-### Menú Principal del Script:
-
+### Menú Principal de la Consola:
 ```text
 ╔═══════════════════════════════════════════════════════════════╗
-║  ██████╗ ██╗   ██╗███████╗ ██████╗ █████╗ ██████╗  ██████╗███╗   ███╗  ║
-║  ██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝████╗ ████║  ║
-║  ██████╔╝██║   ██║███████╗██║     ███████║██████╔╝██║     ██╔████╔██║  ║
-║  ██╔══██╗██║   ██║╚════██║██║     ██╔══██║██╔══██╗██║     ██║╚██╔╝██║  ║
-║  ██████╔╝╚██████╔╝███████║╚██████╗██║  ██║██║  ██║╚██████╗██║ ╚═╝ ██║  ║
-║  ╚══════╝  ╚═════╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝     ╚═╝  ║
+║  ██╗     ██╗██████╗ ███████╗██████╗ ██████╗  ██████╗ ███╗   ███╗║
+║  ██║     ██║██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔═══██╗████╗ ████║║
+║  ██║     ██║██████╔╝█████╗  ██████╔╝██║  ██║██║   ██║██╔████╔██║║
+║  ██║     ██║██╔══██╗██╔══╝  ██╔══██╗██║  ██║██║   ██║██║╚██╔╝██║║
+║  ███████╗██║██████╔╝███████╗██║  ██║██████╔╝╚██████╔╝██║ ╚═╝ ██║║
+║  ╚══════╝╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝║
 ╠═══════════════════════════════════════════════════════════════╣
-║         🔍  Buscador y Detector de Dominios Libre  🔍         ║
+║         🔍    LiberDom - Detector de Dominios Libre    🔍      ║
 ║                     ¡Optimizado para Termux!                  ║
 ╚═══════════════════════════════════════════════════════════════╝
 
@@ -95,16 +102,44 @@ liberdom
 ```
 
 ### Explicación de Opciones:
+1. **Buscar dominio individual:** Comprueba cualquier dominio y el sistema te dirá al instante si está comprado o disponible, junto a detalles de registro como la IP del servidor, registrador oficial o fecha de creación si está ocupado.
+2. **Buscar por lote (archivo .txt o texto pegado):** Comprueba listas de dominios en segundos cargando un archivo `.txt` existente o **pegando el bloque de texto directamente en la consola** (por ejemplo, copiados de una web o chat).
+3. **Generador de nombres:** Escribe un término clave (ej: `tienda`) y el script creará marcas combinando sufijos y prefijos, verificándolos en tiempo real.
 
-1. **Buscar dominio individual:** Escribe cualquier dominio (ej. `miweb.com`) y el sistema te dirá al instante si está comprado o disponible, junto a detalles de registro como la IP del servidor o la fecha de creación en caso de estar ocupado.
-2. **Buscar por lote (archivo .txt o texto pegado):** Comprueba múltiples dominios en segundos. Puedes elegir cargar un archivo `.txt` existente o **pegar el bloque de texto directamente en la consola** (por ejemplo, copiados de una web o chat, separados por comas o saltos de línea). El sistema limpiará automáticamente espacios vacíos, comentarios, duplicados y protocolos.
-3. **Generador de nombres:** Escribe un término (ej: `tienda`) y elige extensiones. El script creará combinaciones de marca (`tiendahub.com`, `gotienda.net`, `tiendadev.co`) y las verificará automáticamente para ver cuáles están libres para que las registres.
+---
+
+## 🌐 Versión Web Premium (Visual & Masiva)
+
+¡Ahora también disponible con una increíble y moderna interfaz gráfica web responsiva! Ubicada en la carpeta `/web/` de este repositorio.
+
+> [!NOTE]
+> La versión web incluye **escaneo masivo en paralelo** con concurrencia controlada en JavaScript, tarjetas responsivas con efecto de vidrio esmerilado (*glassmorphism*), fondos de neón flotantes difuminados y descargas directas de **reportes corporativos en formato PDF moderno** y TXT.
+
+<details>
+<summary>🚀 Cómo arrancar la Web de LiberDom localmente</summary>
+<br>
+
+1. **Ingresa a la carpeta del servidor web:**
+   ```bash
+   cd web
+   ```
+2. **Instala Flask (única dependencia requerida):**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Enciende el servidor local:**
+   ```bash
+   python app.py
+   ```
+4. **Abre tu navegador de preferencia:**
+   Accede a la dirección local [http://127.0.0.1:5000](http://127.0.0.1:5000).
+</details>
 
 ---
 
 ## ⚙️ ¿Cómo funciona bajo el capó?
 
-La mayoría de scripts de detección usan APIs de terceros que cobran o tienen fuertes limitaciones de cuotas por minuto. **LiberDom** utiliza un sistema autónomo de consulta en dos fases:
+La mayoría de scripts de detección usan APIs de terceros limitadas o de pago. **LiberDom** utiliza un sistema autónomo de consulta en dos fases:
 
 ```mermaid
 graph TD
@@ -119,38 +154,11 @@ graph TD
 
 ---
 
-## 🌐 Versión Web Premium (Visual & Masiva)
-
-¡LiberDom ahora cuenta con una interfaz web moderna, responsiva e interactiva! Ubicada en la carpeta `/web/` de este repositorio.
-
-### Características de la Versión Web:
-*   🖥️ **Estética de Vanguardia:** Interfaz con efectos de neón flotantes, paneles de vidrio esmerilado (glassmorphism) y modo oscuro premium.
-*   ⚡ **Búsqueda Masiva en Paralelo:** El escáner masivo de la web procesa múltiples consultas de dominios de forma simultánea mediante peticiones JavaScript optimizadas en paralelo, inyectando tarjetas visuales a medida que terminan.
-*   💾 **Exportación Directa:** Descarga reportes completos de disponibilidad de dominios en archivos `.txt` generados al instante.
-
-### Cómo ejecutar la versión web localmente:
-1.  **Ingresa a la carpeta web:**
-    ```bash
-    cd web
-    ```
-2.  **Instala las dependencias (Flask):**
-    ```bash
-    pip install -r requirements.txt
-    ```
-3.  **Inicia el servidor Flask:**
-    ```bash
-    python app.py
-    ```
-4.  **Abre en tu navegador:**
-    Ingresa a la dirección local [http://127.0.0.1:5000](http://127.0.0.1:5000) en cualquier navegador web.
-
----
-
 ## ⚠️ Consejos Importantes (Rate Limiting)
 
 Los servidores oficiales de WHOIS limitan la cantidad de solicitudes por minuto para evitar abusos de red (Spam).
-*   Si realizas búsquedas masivas muy rápidas, algunos servidores responderán de forma vacía o bloqueada. Verás el estado como `DESCONOCIDO`.
-*   **Recomendación:** Espera unos minutos entre análisis muy grandes o utiliza una red diferente (datos móviles o VPN).
+*   Si realizas búsquedas masivas muy rápidas en modo híbrido, algunos servidores responderán de forma vacía o bloqueada y verás el estado `DESCONOCIDO`.
+*   **Recomendación:** Espera unos minutos entre análisis muy grandes, aumenta el retraso de seguridad recomendado por el script, o utiliza el **Modo Ultra-Rápido (Solo DNS)** el cual es inmediato e inmune a los bloqueos de IP.
 
 ---
 
@@ -161,4 +169,4 @@ Los servidores oficiales de WHOIS limitan la cantidad de solicitudes por minuto 
 2. Haz un **Fork** y añade nuevas mejoras.
 3. ¡Compártelo con más desarrolladores y entusiastas de Termux!
 
-Desarrollado con amor para la comunidad hispana. 💻✨
+Desarrollado con amor para la comunidad hispana por **NeoTurcios**. 💻✨
