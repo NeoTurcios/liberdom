@@ -384,10 +384,10 @@ class MainActivity : AppCompatActivity() {
             "disponible" -> {
                 cardResult.setBackgroundResource(R.drawable.card_background_available)
                 txtResultBadge.text = if (currentLang == "es") "Libre" else "Free"
-                txtResultBadge.setTextColor(getColor(R.color.colorPrimary))
+                txtResultBadge.setTextColor(0xff00e676.toInt())
                 txtResultBadge.setBackgroundColor(0x1a00e676)
                 txtResultDesc.text = if (currentLang == "es") "¡Felicidades! Este dominio está libre. Puedes registrarlo ahora mismo en tu proveedor favorito." else "Congratulations! This domain is free. You can register it right now with your favorite provider."
-                txtResultDesc.setTextColor(getColor(R.color.colorPrimary))
+                txtResultDesc.setTextColor(0xff00e676.toInt())
             }
             "comprado" -> {
                 cardResult.setBackgroundResource(R.drawable.card_background_taken)
