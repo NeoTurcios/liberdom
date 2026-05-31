@@ -137,6 +137,36 @@ liberdom
 
 ---
 
+## 🤖 Bot de Telegram (Autónomo & Multi-idioma)
+
+¡Ahora puedes llevar **LiberDom** a tus grupos y chats de Telegram! Hemos desarrollado un bot autónomo e inteligente escrito en Python nativo puro, **100% libre de dependencias externas** y con soporte i18n total.
+
+> [!NOTE]
+> El bot responde al instante con tarjetas estilizadas cuando le envías cualquier dominio en texto plano (ej: `web.com`), comandos de consulta, o botones interactivos de selección de idioma (`es` o `en`).
+
+<details>
+<summary>🚀 Cómo iniciar tu Bot de Telegram en segundos</summary>
+<br>
+
+1. **Crea tu Bot con BotFather:**
+   - Abre Telegram y busca al bot oficial [@BotFather](https://t.me/BotFather).
+   - Envía `/newbot` y sigue las instrucciones en pantalla para elegir nombre y un usuario público terminado en `_bot`.
+   - Copia el **Token API** que te asigne (ej: `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ`).
+
+2. **Enciende el motor del Bot:**
+   - Abre tu terminal en la carpeta del proyecto y ejecuta:
+     ```bash
+     python telegram_bot.py
+     ```
+   - El script detectará que es el primer inicio y te solicitará pegar tu **Bot Token** en la consola.
+   - ¡Listo! El token se guardará de forma segura y persistente en `.telegram_bot_config.json`, y el bot comenzará a escuchar mensajes en tiempo real.
+
+3. **Interactúa en Telegram:**
+   - Abre el chat con tu nuevo bot, presiona **Iniciar** y envíale cualquier dominio directamente para ver los resultados técnicos detallados en milisegundos.
+</details>
+
+---
+
 ## ⚙️ ¿Cómo funciona bajo el capó?
 
 La mayoría de scripts de detección usan APIs de terceros limitadas o de pago. **LiberDom** utiliza un sistema autónomo de consulta en dos fases:
