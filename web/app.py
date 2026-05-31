@@ -77,20 +77,21 @@ def registrar_whois_servidor(domain, server=None):
     except Exception as e:
         return f"ERROR: {str(e)}"
 
-def chequear_dominio(domain, dns_only=False):
+def chequear_dominio(domain, dns_only=False, lang='es'):
     """Determina si un dominio está libre (disponible) o comprado (registrado)"""
     domain = domain.strip().lower()
     
     # Validar formato
     if not '.' in domain or len(domain) < 4:
-        return "invalido", "Formato inválido (Ej: misitio.com)", {}
+        msg = "Formato inválido (Ej: misitio.com)" if lang == 'es' else "Invalid format (e.g. mysite.com)"
+        return "invalido", msg, {}
 
     domain = re.sub(r'^(https?://)?(www\.)?', '', domain)
     domain = domain.split('/')[0]
 
     info = {
         "dominio": domain,
-        "metodo": "Ninguno",
+        "metodo": "Ninguno" if lang == 'es' else "None",
         "ip": None,
         "whois_server": None,
         "fecha_creacion": None,
@@ -101,18 +102,22 @@ def chequear_dominio(domain, dns_only=False):
     try:
         ip = socket.gethostbyname(domain)
         info["ip"] = ip
-        info["metodo"] = "Resolución DNS"
-        return "comprado", "Registrado (Activo por DNS)", info
+        info["metodo"] = "Resolución DNS" if lang == 'es' else "DNS Resolution"
+        msg = "Registrado (Activo por DNS)" if lang == 'es' else "Registered (Active via DNS)"
+        return "comprado", msg, info
     except socket.gaierror:
         if dns_only:
-            info["metodo"] = "Verificación DNS Rápida"
-            return "disponible", "Disponible (Por DNS - Sin registros activos)", info
+            info["metodo"] = "Verificación DNS Rápida" if lang == 'es' else "Fast DNS Verification"
+            msg = "Disponible (Por DNS - Sin registros activos)" if lang == 'es' else "Available (via DNS - No active records)"
+            return "disponible", msg, info
         pass
 
     # 2. WHOIS
     res = registrar_whois_servidor(domain)
     if res.startswith("ERROR:"):
-        return "desconocido", f"Error de servidor WHOIS ({res[6:]})", info
+        err_msg = res[6:]
+        msg = f"Error de servidor WHOIS ({err_msg})" if lang == 'es' else f"WHOIS server error ({err_msg})"
+        return "desconocido", msg, info
 
     res_lower = res.lower()
     refer_server = None
@@ -129,7 +134,8 @@ def chequear_dominio(domain, dns_only=False):
         if not res.startswith("ERROR:"):
             res_lower = res.lower()
         else:
-            return "desconocido", f"Error al redirigir WHOIS a {refer_server}", info
+            msg = f"Error al redirigir WHOIS a {refer_server}" if lang == 'es' else f"Error redirecting WHOIS to {refer_server}"
+            return "desconocido", msg, info
 
     # Analizar si está disponible
     patrones_disponible = [
@@ -147,10 +153,11 @@ def chequear_dominio(domain, dns_only=False):
             esta_disponible = True
             break
 
-    info["metodo"] = "Consulta WHOIS Socket 43"
+    info["metodo"] = "Consulta WHOIS Socket 43" if lang == 'es' else "WHOIS Socket 43 Query"
 
     if esta_disponible:
-        return "disponible", "¡Disponible para registro!", info
+        msg = "¡Disponible para registro!" if lang == 'es' else "Available for registration!"
+        return "disponible", msg, info
     
     # Analizar si está comprado
     patrones_comprado = [
@@ -178,9 +185,11 @@ def chequear_dominio(domain, dns_only=False):
                 info["registrador"] = parts[1].strip()
 
     if esta_comprado or len(res) > 250:
-        return "comprado", "Registrado (Confirmado por WHOIS)", info
+        msg = "Registrado (Confirmado por WHOIS)" if lang == 'es' else "Registered (Confirmed by WHOIS)"
+        return "comprado", msg, info
     else:
-        return "desconocido", "No se pudo determinar (Límite WHOIS / TLD no soportado)", info
+        msg = "No se pudo determinar (Límite WHOIS / TLD no soportado)" if lang == 'es' else "Could not determine (WHOIS Limit / TLD not supported)"
+        return "desconocido", msg, info
 
 # ==========================================
 # RUTAS DE LA APLICACIÓN FLASK
@@ -196,11 +205,16 @@ def api_check():
     """Endpoint API para buscar un dominio individual"""
     domain = request.args.get('domain', '').strip()
     dns_only = request.args.get('dns_only', 'false').lower() == 'true'
+    lang = request.args.get('lang', 'es').strip().lower()
     
-    if not domain:
-        return jsonify({"status": "error", "message": "Falta el parámetro 'domain'"}), 400
+    if lang not in ['es', 'en']:
+        lang = 'es'
         
-    estado, detalle, info = chequear_dominio(domain, dns_only=dns_only)
+    if not domain:
+        err_msg = "Falta el parámetro 'domain'" if lang == 'es' else "Missing parameter 'domain'"
+        return jsonify({"status": "error", "message": err_msg}), 400
+        
+    estado, detalle, info = chequear_dominio(domain, dns_only=dns_only, lang=lang)
     
     return jsonify({
         "status": "success",

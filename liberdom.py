@@ -23,12 +23,293 @@ FIN = "\033[0m"
 NEGRITA = "\033[1m"
 CURSIVA = "\033[3m"
 
+# ==========================================
+# CONFIGURACIÓN PERSISTENTE DE IDIOMA (I18N)
+# ==========================================
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".liberdom_config.json")
+CONFIG = {"lang": "es"}
+
+def cargar_configuracion():
+    global CONFIG
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                CONFIG = json.load(f)
+        except Exception:
+            pass
+    if "lang" not in CONFIG:
+        CONFIG["lang"] = "es"
+
+def guardar_configuracion():
+    try:
+        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+            json.dump(CONFIG, f, indent=4)
+    except Exception:
+        pass
+
+# Diccionario de Textos de la Interfaz CLI
+TEXTS = {
+    "es": {
+        "banner_sub": "¡Optimizado para Termux!",
+        "menu_titulo": "💻  MENÚ PRINCIPAL EN ESPAÑOL  💻",
+        "menu_opcion_1": "🔍 Buscar un dominio individual",
+        "menu_opcion_2": "📂 Buscar por lote (archivo txt)",
+        "menu_opcion_3": "💡 Generador de nombres + Verificar disponibilidad",
+        "menu_opcion_4": "📘 Guía de ayuda / Consejos",
+        "menu_opcion_5": "🌐 Cambiar Idioma (Change Language)",
+        "menu_opcion_6": "👋 Salir del script",
+        "ingresar_opcion": "👉 Selecciona una opción (1-6): ",
+        "opcion_incorrecta": "❌ Opción incorrecta. Inténtalo de nuevo.",
+        "salir_mensaje": "👋 ¡Gracias por usar LiberDom! Diseñado para optimizar tus proyectos.\n¡Haz tu repositorio público y compártelo con el mundo! 🚀",
+        "interrumpido": "\n\n⚠ Script interrumpido por el usuario. ¡Adiós!\n",
+        
+        # Consulta Individual
+        "ind_title": "╔══[ OPCIÓN 1: BÚSQUEDA INDIVIDUAL ]═════════════════════════╗",
+        "ind_instr_1": "║ Escribe el dominio completo que deseas buscar.            ║",
+        "ind_instr_2": "║ Ejemplos: midominio.com, proyecto.net, app.co, web.es       ║",
+        "ind_prompt": "👉 Ingresa el dominio: ",
+        "ind_empty": "❌ No ingresaste ningún dominio.",
+        "enter_prev_menu": "Presiona ENTER para volver al menú anterior...",
+        "enter_main_menu": "Presiona ENTER para regresar al menú principal...",
+        "querying_db": "Consultando base de datos mundial de dominios...",
+        "results_for": "📊 RESULTADOS PARA:",
+        "status_avail_desc": "¡Felicidades! Este dominio está libre. Puedes registrarlo.",
+        "info_header": "Información del registro:",
+        "info_ip": "• IP de Servidor:",
+        "info_registrar": "• Registrado con:",
+        "info_date": "• Fecha Creación:",
+        "info_method": "• Método de detección:",
+        "unknown_help": "Intenta buscarlo directamente en tu navegador web o proveedor DNS.",
+        
+        # Consulta Lote
+        "lote_title": "╔══[ OPCIÓN 2: BÚSQUEDA EN LOTE / MASIVA ]═══════════════════╗",
+        "lote_instr_1": "║ Comprueba listas grandes de dominios con alta velocidad.   ║",
+        "lote_instr_2": "║ Puedes usar un archivo .txt o pegar texto directamente.    ║",
+        "lote_prompt_type": "¿Cómo deseas ingresar los dominios?",
+        "lote_type_file": "Cargar desde un archivo de texto (.txt)",
+        "lote_type_paste": "Pegar lista de dominios directamente en la consola",
+        "select_1_2": "👉 Selecciona una opción (1-2): ",
+        "file_prompt": "👉 Escribe el nombre o ruta del archivo (Ej: dominios.txt): ",
+        "file_not_exist": "⚠ El archivo '{ruta}' no existe. ¿Quieres crear un archivo demo con ejemplos? (s/n): ",
+        "file_demo_created": "✔ Archivo '{ruta}' creado con 8 dominios de ejemplo.",
+        "file_read_error": "❌ Error al leer el archivo: ",
+        "paste_instr_1": "👉 Pega tus dominios a continuación.",
+        "paste_instr_2": "Puedes separarlos por comas, espacios o saltos de línea.",
+        "paste_instr_3": "Cuando termines, escribe FIN en una línea sola y presiona ENTER:",
+        "paste_warn": "Escribe tus dominios o 'FIN' para salir.",
+        "lote_no_valid": "❌ No se encontraron dominios válidos para analizar.",
+        "lote_processing": "✔ Se procesarán {total} dominios únicos.",
+        "lote_duplicates": "💡 Se omitieron {duplicados} dominios duplicados/inválidos.",
+        "scan_mode_title": "Selecciona el MODO DE ESCANEO para la lista:",
+        "scan_mode_dns_title": "Modo Ultra-Rápido (Solo DNS):",
+        "scan_mode_dns_desc": "     Comprueba si el dominio resuelve IP. Inmediato, sin límites de velocidad.\n     Recomendado para listas gigantes (más de 100 dominios).",
+        "scan_mode_hybrid_title": "Modo Híbrido Completo (DNS + WHOIS):",
+        "scan_mode_hybrid_desc": "     Comprobación oficial de registro en bases de datos mundiales.\n     Recomendado para listas cortas/medianas para evitar bloqueos WHOIS.",
+        "select_mode": "👉 Selecciona modo (1 o 2): ",
+        "rate_limit_warn": "Para evitar que los servidores WHOIS bloqueen tu IP (Rate Limit), se aconseja un retraso:",
+        "suggest_delay_50": "  • Sugerido para tu lista (>50 dominios): 1.5 a 2.0 segundos",
+        "suggest_delay_20": "  • Sugerido para tu lista (>20 dominios): 1.0 segundo",
+        "suggest_delay_short": "  • Sugerido para tu lista: 0.4 segundos",
+        "delay_prompt": "👉 Retraso en segundos entre búsquedas [Enter para el sugerido]: ",
+        "save_prompt": "¿Quieres guardar los resultados en un archivo de texto? (s/n): ",
+        "report_header": "=== RESULTADOS DE BÚSQUEDA DE DOMINIOS ===",
+        "report_date": "Fecha: ",
+        "report_mode": "Modo: ",
+        "report_total": "Total de dominios únicos analizados: ",
+        "report_dns_only": "Solo DNS (Rápido)",
+        "report_hybrid": "Híbrido DNS+WHOIS",
+        "scanning_item": "Escaneando {dom}...",
+        "libre_dns": "Libre por DNS",
+        "libre_whois": "Libre (WHOIS)",
+        "scan_finished_saved": "✔ ¡Escaneo finalizado en {duracion:.1f}s! Resultados guardados en: {archivo}",
+        "scan_finished": "✔ ¡Escaneo finalizado en {duracion:.1f}s!",
+        "summary_label": "Resumen: {disponibles} Disponibles | {comprados} Comprados | {desconocidos} Desconocidos",
+        
+        # Generador de nombres
+        "gen_title": "╔══[ OPCIÓN 3: GENERADOR E IDEAS DE DOMINIOS ]═══════════════╗",
+        "gen_instr": "║ Mezcla palabras clave con TLDs para encontrar ideas libres ║",
+        "gen_prompt": "👉 Escribe una palabra clave (Ej: tecno, app, net): ",
+        "gen_empty": "❌ Entrada vacía.",
+        "gen_tld_prompt": "Elige las extensiones (TLDs) a combinar (Separadas por comas):",
+        "gen_tlds_default": "👉 Extensiones [por defecto: com, net, co]: ",
+        "gen_style_title": "Elige el estilo de combinación:",
+        "gen_style_1": "1. Palabra + sufijo (Ej: {palabra}hub, {palabra}app, {palabra}lab)",
+        "gen_style_2": "2. Prefijo + palabra (Ej: super{palabra}, go{palabra}, check{palabra})",
+        "gen_style_3": "3. Palabra exacta con múltiples TLDs (Ej: {palabra}.com, {palabra}.net)",
+        "gen_select_style": "👉 Elige una opción (1-3): ",
+        "gen_ready": "✔ Se generaron {total} ideas de dominios para comprobar.",
+        "gen_start_check": "¿Quieres empezar a verificar cuáles están libres ahora mismo? (s/n): ",
+        "gen_header_dom": "DOMINIO GENERADO",
+        "gen_header_status": "ESTADO",
+        "gen_avail": "✔ ¡DISPONIBLE!",
+        "gen_taken": "❌ Comprado",
+        "gen_unk": "? Desconocido",
+        "gen_summary": "⭐ Fin del análisis. Encontraste {libres} dominios listos para comprar.",
+        
+        # Guía de ayuda
+        "help_title": "╔══[ OPCIÓN 4: GUÍA DE AYUDA / CONSEJOS ]════════════════════╗",
+        "help_body": """{NEGRITA}{CIAN}📘 CONSEJOS E INSTRUCCIONES DE USO (Termux) {FIN}
+
+{NEGRITA}{AMARILLO}1. Límites de consulta (Rate Limiting){FIN}
+Los servidores WHOIS mundiales tienen protección contra spam. Si buscas 
+demasiados dominios en pocos minutos, el servidor podría bloquear temporalmente 
+las peticiones y verás el estado como "DESCONOCIDO" o "LÍMITE". 
+• {CURSIVA}Solución: Espera un par de minutos o usa una VPN/cambia de IP.{FIN}
+
+{NEGRITA}{AMARILLO}2. Dominios Especiales (.es, .ar, .cl, etc.){FIN}
+Algunos países tienen políticas WHOIS muy estrictas y no permiten consultas 
+masivas directas por sockets libres. Si no se puede verificar un TLD local, 
+el script te avisará para comprobarlo por vía DNS o manual.
+
+{NEGRITA}{AMARILLO}3. Formato del archivo para búsquedas en Lote{FIN}
+Crea tu lista en un archivo de texto plano como {CIAN}dominios.txt{FIN}.
+Cada dominio debe ir en una línea separada. Ejemplo:
+    {BLANCO}misitio.com
+    tusitio.net
+    otroweb.io{FIN}
+
+{NEGRITA}{AMARILLO}4. Licencia y Uso{FIN}
+Este script es público y 100% de código abierto. ¡Puedes usarlo y editarlo 
+para integrarlo en tus herramientas de automatización de hacking ético, 
+desarrollo web o marketing!
+"""
+    },
+    "en": {
+        "banner_sub": "Optimized for Termux!",
+        "menu_titulo": "💻  MAIN MENU IN ENGLISH  💻",
+        "menu_opcion_1": "🔍 Search an individual domain",
+        "menu_opcion_2": "📂 Bulk search (txt file)",
+        "menu_opcion_3": "💡 Name generator + Check availability",
+        "menu_opcion_4": "📘 Help guide / Tips",
+        "menu_opcion_5": "🌐 Change Language (Cambiar Idioma)",
+        "menu_opcion_6": "👋 Exit the script",
+        "ingresar_opcion": "👉 Select an option (1-6): ",
+        "opcion_incorrecta": "❌ Incorrect option. Try again.",
+        "salir_mensaje": "👋 Thank you for using LiberDom! Designed to optimize your projects.\nMake your repository public and share it with the world! 🚀",
+        "interrumpido": "\n\n⚠ Script interrupted by the user. Goodbye!\n",
+        
+        # Individual Search
+        "ind_title": "╔══[ OPTION 1: INDIVIDUAL SEARCH ]═══════════════════════════╗",
+        "ind_instr_1": "║ Enter the complete domain you wish to search.             ║",
+        "ind_instr_2": "║ Examples: mydomain.com, project.net, app.co, web.es       ║",
+        "ind_prompt": "👉 Enter the domain: ",
+        "ind_empty": "❌ You did not enter any domain.",
+        "enter_prev_menu": "Press ENTER to return to the previous menu...",
+        "enter_main_menu": "Press ENTER to return to the main menu...",
+        "querying_db": "Querying global domain database...",
+        "results_for": "📊 RESULTS FOR:",
+        "status_avail_desc": "Congratulations! This domain is free. You can register it.",
+        "info_header": "Registration information:",
+        "info_ip": "• Server IP:",
+        "info_registrar": "• Registered with:",
+        "info_date": "• Creation Date:",
+        "info_method": "• Detection method:",
+        "unknown_help": "Try searching for it directly in your web browser or DNS provider.",
+        
+        # Bulk Search
+        "lote_title": "╔══[ OPTION 2: BULK / MASSIVE SEARCH ]══════════════════════╗",
+        "lote_instr_1": "║ Check large lists of domains at high speed.                ║",
+        "lote_instr_2": "║ You can use a .txt file or paste text directly.            ║",
+        "lote_prompt_type": "How do you want to enter the domains?",
+        "lote_type_file": "Load from a text file (.txt)",
+        "lote_type_paste": "Paste domain list directly in the console",
+        "select_1_2": "👉 Select an option (1-2): ",
+        "file_prompt": "👉 Enter the filename or path (e.g. domains.txt): ",
+        "file_not_exist": "⚠ File '{ruta}' does not exist. Do you want to create a demo file with examples? (y/n): ",
+        "file_demo_created": "✔ File '{ruta}' created with 8 example domains.",
+        "file_read_error": "❌ Error reading file: ",
+        "paste_instr_1": "👉 Paste your domains below.",
+        "paste_instr_2": "You can separate them by commas, spaces, or line breaks.",
+        "paste_instr_3": "When finished, type FIN on a line by itself and press ENTER:",
+        "paste_warn": "Enter your domains or 'FIN' to exit.",
+        "lote_no_valid": "❌ No valid domains found to analyze.",
+        "lote_processing": "✔ {total} unique domains will be processed.",
+        "lote_duplicates": "💡 {duplicados} duplicate/invalid domains were omitted.",
+        "scan_mode_title": "Select the SCAN MODE for the list:",
+        "scan_mode_dns_title": "Ultra-Fast Mode (DNS Only):",
+        "scan_mode_dns_desc": "     Checks if the domain resolves IP. Immediate, without rate limits.\n     Recommended for giant lists (more than 100 domains).",
+        "scan_mode_hybrid_title": "Full Hybrid Mode (DNS + WHOIS):",
+        "scan_mode_hybrid_desc": "     Official registration check in global databases.\n     Recommended for short/medium lists to avoid WHOIS blocks.",
+        "select_mode": "👉 Select mode (1 or 2): ",
+        "rate_limit_warn": "To prevent WHOIS servers from blocking your IP (Rate Limit), a delay is advised:",
+        "suggest_delay_50": "  • Suggested for your list (>50 domains): 1.5 to 2.0 seconds",
+        "suggest_delay_20": "  • Suggested for your list (>20 domains): 1.0 second",
+        "suggest_delay_short": "  • Suggested for your list: 0.4 seconds",
+        "delay_prompt": "👉 Delay in seconds between searches [Enter for suggested]: ",
+        "save_prompt": "Do you want to save results to a text file? (y/n): ",
+        "report_header": "=== DOMAIN SEARCH RESULTS ===",
+        "report_date": "Date: ",
+        "report_mode": "Mode: ",
+        "report_total": "Total unique domains analyzed: ",
+        "report_dns_only": "DNS Only (Fast)",
+        "report_hybrid": "Hybrid DNS+WHOIS",
+        "scanning_item": "Scanning {dom}...",
+        "libre_dns": "Free by DNS",
+        "libre_whois": "Free (WHOIS)",
+        "scan_finished_saved": "✔ Scan finished in {duracion:.1f}s! Results saved to: {archivo}",
+        "scan_finished": "✔ Scan finished in {duracion:.1f}s!",
+        "summary_label": "Summary: {disponibles} Available | {comprados} Registered | {desconocidos} Unknown",
+        
+        # Name generator
+        "gen_title": "╔══[ OPTION 3: DOMAIN GENERATOR & IDEAS ]════════════════════╗",
+        "gen_instr": "║ Mix keywords with TLDs to find available ideas             ║",
+        "gen_prompt": "👉 Enter a keyword (e.g. tecno, app, net): ",
+        "gen_empty": "❌ Empty input.",
+        "gen_tld_prompt": "Choose the extensions (TLDs) to combine (Separated by commas):",
+        "gen_tlds_default": "👉 Extensions [default: com, net, co]: ",
+        "gen_style_title": "Choose the combination style:",
+        "gen_style_1": "1. Keyword + suffix (e.g. {palabra}hub, {palabra}app, {palabra}lab)",
+        "gen_style_2": "2. Prefix + keyword (e.g. super{palabra}, go{palabra}, check{palabra})",
+        "gen_style_3": "3. Exact keyword with multiple TLDs (e.g. {palabra}.com, {palabra}.net)",
+        "gen_select_style": "👉 Choose an option (1-3): ",
+        "gen_ready": "✔ Generated {total} domain ideas to check.",
+        "gen_start_check": "Do you want to start checking which ones are free right now? (y/n): ",
+        "gen_header_dom": "GENERATED DOMAIN",
+        "gen_header_status": "STATUS",
+        "gen_avail": "✔ AVAILABLE!",
+        "gen_taken": "❌ Registered",
+        "gen_unk": "? Unknown",
+        "gen_summary": "⭐ End of analysis. You found {libres} domains ready to register.",
+        
+        # Help guide
+        "help_title": "╔══[ OPTION 4: HELP GUIDE / ADVICE ]═════════════════════════╗",
+        "help_body": """{NEGRITA}{CIAN}📘 USER TIPS AND INSTRUCTIONS (Termux) {FIN}
+
+{NEGRITA}{AMARILLO}1. Query Limits (Rate Limiting){FIN}
+Global WHOIS servers have protection against spam. If you search too 
+many domains in a few minutes, the server might temporarily block 
+requests and you will see the status as "UNKNOWN" or "LIMIT". 
+• {CURSIVA}Solution: Wait a couple of minutes or use a VPN/change your IP.{FIN}
+
+{NEGRITA}{AMARILLO}2. Special Domains (.es, .ar, .cl, etc.){FIN}
+Some countries have very strict WHOIS policies and do not allow raw 
+bulk socket queries. If a local TLD cannot be verified, the script 
+will notify you to check it via DNS or manually.
+
+{NEGRITA}{AMARILLO}3. File format for bulk searches{FIN}
+Create your list in a plain text file like {CIAN}domains.txt{FIN}.
+Each domain must be on a separate line. Example:
+    {BLANCO}mysite.com
+    yoursite.net
+    otherweb.io{FIN}
+
+{NEGRITA}{AMARILLO}4. License and Usage{FIN}
+This script is public and 100% open source. You can use and edit it 
+to integrate it into your ethical hacking, web dev, or marketing tools!
+"""
+    }
+}
+
 # Limpiar pantalla según el sistema operativo
 def limpiar_pantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # Banner estilizado
 def mostrar_banner():
+    lang = CONFIG["lang"]
+    sub = TEXTS[lang]["banner_sub"]
+    padding = " " * ((38 - len(sub)) // 2)
+    right_padding = " " * (38 - len(sub) - len(padding))
     banner = f"""
 {CIAN}╔═══════════════════════════════════════════════════════════════╗
 ║  {VERDE}██╗     ██╗██████╗ ███████╗██████╗ ██████╗  ██████╗ ███╗   ███╗{CIAN}  ║
@@ -39,7 +320,7 @@ def mostrar_banner():
 ║  {VERDE}╚══════╝╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝     ╚═╝{CIAN}  ║
 ╠═══════════════════════════════════════════════════════════════╣
 ║         {BLANCO}🔍    LiberDom - Detector de Dominios Libre    🔍         {CIAN}║
-║                     {AMARILLO}¡Optimizado para Termux!                  {CIAN}║
+║               {AMARILLO}{padding}{sub}{right_padding}{CIAN}            ║
 ╚═══════════════════════════════════════════════════════════════╝{FIN}"""
     print(banner)
 
@@ -51,7 +332,6 @@ def registrar_whois_servidor(domain, server=None):
     """Realiza una consulta WHOIS pura usando sockets TCP en el puerto 43"""
     if not server:
         tld = domain.split('.')[-1].lower()
-        # Servidores WHOIS comunes para agilizar
         tld_servers = {
             'com': 'whois.verisign-grs.com',
             'net': 'whois.verisign-grs.com',
@@ -93,9 +373,6 @@ def registrar_whois_servidor(domain, server=None):
             query = f"domain {domain}\r\n"
         elif server == 'whois.denic.de':
             query = f"-T dn {domain}\r\n"
-        elif server == 'whois.nic.es':
-            # .es suele requerir configuración adicional o no da WHOIS público fácil por socket.
-            query = f"{domain}\r\n"
         else:
             query = f"{domain}\r\n"
             
@@ -117,25 +394,25 @@ def registrar_whois_servidor(domain, server=None):
     except Exception as e:
         return f"ERROR: {str(e)}"
 
-def chequear_dominio(domain, dns_only=False):
+def chequear_dominio(domain, dns_only=False, lang='es'):
     """
     Determina si un dominio está libre (disponible) o comprado (registrado).
-    Retorna: (estado, detalle_espanol, info_adicional)
+    Retorna: (estado, detalle_localizado, info_adicional)
     """
     domain = domain.strip().lower()
     
     # Validar formato básico de dominio
     if not '.' in domain or len(domain) < 4:
-        return "invalido", "Formato inválido (Ej: misitio.com)", {}
+        msg = "Formato inválido (Ej: misitio.com)" if lang == 'es' else "Invalid format (e.g. mysite.com)"
+        return "invalido", msg, {}
 
     # Quitar protocolos si el usuario los ingresó por error
     domain = re.sub(r'^(https?://)?(www\.)?', '', domain)
-    # Quitar rutas extras
     domain = domain.split('/')[0]
 
     info = {
         "dominio": domain,
-        "metodo": "Ninguno",
+        "metodo": "Ninguno" if lang == 'es' else "None",
         "ip": None,
         "whois_server": None,
         "fecha_creacion": None,
@@ -148,14 +425,14 @@ def chequear_dominio(domain, dns_only=False):
     try:
         ip = socket.gethostbyname(domain)
         info["ip"] = ip
-        info["metodo"] = "Resolución DNS"
-        return "comprado", "COMPRADO / REGISTRADO (Activo por DNS)", info
+        info["metodo"] = "Resolución DNS" if lang == 'es' else "DNS Resolution"
+        msg = "COMPRADO / REGISTRADO (Activo por DNS)" if lang == 'es' else "REGISTERED (Active via DNS)"
+        return "comprado", msg, info
     except socket.gaierror:
-        # Si falla DNS, puede que esté libre o comprado pero inactivo (sin hosting)
         if dns_only:
-            # En modo DNS-only asumimos disponible (sin registros activos de DNS)
-            info["metodo"] = "Verificación DNS Rápida"
-            return "disponible", "DISPONIBLE (Por DNS - Sin registros activos)", info
+            info["metodo"] = "Verificación DNS Rápida" if lang == 'es' else "Fast DNS Verification"
+            msg = "DISPONIBLE (Por DNS - Sin registros activos)" if lang == 'es' else "AVAILABLE (via DNS - No active records)"
+            return "disponible", msg, info
         pass
 
     # ----------------------------------------------------
@@ -164,9 +441,9 @@ def chequear_dominio(domain, dns_only=False):
     res = registrar_whois_servidor(domain)
     
     if res.startswith("ERROR:"):
-        # Si falla WHOIS básico, intentamos verificar si al menos responde a ping DNS general (Name Servers)
-        # Algunos servidores cortan la conexión por spam o bloqueos de red
-        return "desconocido", f"Error de red/servidor WHOIS ({res[6:]})", info
+        err_msg = res[6:]
+        msg = f"Error de red/servidor WHOIS ({err_msg})" if lang == 'es' else f"Network/WHOIS server error ({err_msg})"
+        return "desconocido", msg, info
 
     # Analizar respuesta de IANA (si redirige a otro servidor)
     res_lower = res.lower()
@@ -184,7 +461,8 @@ def chequear_dominio(domain, dns_only=False):
         if not res.startswith("ERROR:"):
             res_lower = res.lower()
         else:
-            return "desconocido", f"Error al redirigir WHOIS a {refer_server}", info
+            msg = f"Error al redirigir WHOIS a {refer_server}" if lang == 'es' else f"Error redirecting WHOIS to {refer_server}"
+            return "desconocido", msg, info
 
     # ----------------------------------------------------
     # PARSEO DE RESULTADOS EN BÚSQUEDA DE SEÑALES DE LIBRE
@@ -204,10 +482,11 @@ def chequear_dominio(domain, dns_only=False):
             esta_disponible = True
             break
 
-    info["metodo"] = "Consulta WHOIS Socket 43"
+    info["metodo"] = "Consulta WHOIS Socket 43" if lang == 'es' else "WHOIS Socket 43 Query"
 
     if esta_disponible:
-        return "disponible", "¡DISPONIBLE! (No está registrado)", info
+        msg = "¡DISPONIBLE! (No está registrado)" if lang == 'es' else "AVAILABLE! (Not registered)"
+        return "disponible", msg, info
     
     # Si no tiene patrones de libre, buscar campos típicos de comprado
     patrones_comprado = [
@@ -235,9 +514,11 @@ def chequear_dominio(domain, dns_only=False):
                 info["registrador"] = parts[1].strip()
 
     if esta_comprado or len(res) > 250:
-        return "comprado", "COMPRADO / REGISTRADO (Confirmado por WHOIS)", info
+        msg = "COMPRADO / REGISTRADO (Confirmado por WHOIS)" if lang == 'es' else "REGISTERED (Confirmed by WHOIS)"
+        return "comprado", msg, info
     else:
-        return "desconocido", "No se pudo determinar con certeza (Límite WHOIS / TLD no soportado)", info
+        msg = "No se pudo determinar con certeza (Límite WHOIS / TLD no soportado)" if lang == 'es' else "Could not determine with certainty (WHOIS Limit / TLD not supported)"
+        return "desconocido", msg, info
 
 # ==========================================
 # INTERFAZ DE USUARIO E INTERACCIÓN
@@ -245,86 +526,94 @@ def chequear_dominio(domain, dns_only=False):
 
 def mostrar_animacion_carga():
     """Muestra un spinner elegante mientras se realiza la consulta"""
+    lang = CONFIG["lang"]
+    msg = TEXTS[lang]["querying_db"]
     spinner = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
     for i in range(8):
         for char in spinner:
-            sys.stdout.write(f"\r{CIAN}[{char}] {AMARILLO}Consultando base de datos mundial de dominios...{FIN}")
+            sys.stdout.write(f"\r{CIAN}[{char}] {AMARILLO}{msg}{FIN}")
             sys.stdout.flush()
             time.sleep(0.02)
-    sys.stdout.write("\r" + " " * 65 + "\r")
+    sys.stdout.write("\r" + " " * 75 + "\r")
     sys.stdout.flush()
 
 def consulta_individual():
+    lang = CONFIG["lang"]
+    t = TEXTS[lang]
+    
     limpiar_pantalla()
     mostrar_banner()
-    print(f"\n{NEGRITA}{CIAN}╔══[ OPCIÓN 1: BÚSQUEDA INDIVIDUAL ]═════════════════════════╗{FIN}")
-    print(f"║ Escribe el dominio completo que deseas buscar.            ║")
-    print(f"║ Ejemplos: {VERDE}midominio.com{FIN}, {VERDE}proyecto.net{FIN}, {VERDE}app.co{FIN}, {VERDE}web.es{FIN}       ║")
+    print(f"\n{NEGRITA}{CIAN}{t['ind_title']}{FIN}")
+    print(f"{t['ind_instr_1']}")
+    print(f"{t['ind_instr_2']}")
     print(f"{CIAN}╚════════════════════════════════════════════════════════════╝{FIN}\n")
     
-    dominio = input(f"{BLANCO}👉 Ingresa el dominio: {FIN}").strip()
+    dominio = input(f"{BLANCO}{t['ind_prompt']}{FIN}").strip()
     if not dominio:
-        print(f"\n{ROJO}❌ No ingresaste ningún dominio.{FIN}")
-        input(f"\n{GRIS}Presiona ENTER para volver al menú anterior...{FIN}")
+        print(f"\n{ROJO}{t['ind_empty']}{FIN}")
+        input(f"\n{GRIS}{t['enter_prev_menu']}{FIN}")
         return
 
     print()
     mostrar_animacion_carga()
     
-    estado, detalle, info = chequear_dominio(dominio)
+    estado, detalle, info = chequear_dominio(dominio, lang=lang)
     
-    print(f"{CIAN}📊 RESULTADOS PARA:{FIN} {NEGRITA}{BLANCO}{dominio.upper()}{FIN}\n")
+    print(f"{CIAN}{t['results_for']}{FIN} {NEGRITA}{BLANCO}{dominio.upper()}{FIN}\n")
     
     if estado == "disponible":
         print(f"  {VERDE}███████████████████████████████████████████████")
         print(f"  ██ [✔] {detalle.upper()} ██")
         print(f"  ███████████████████████████████████████████████{FIN}\n")
-        print(f"  {NEGRITA}{VERDE}¡Felicidades! Este dominio está libre. Puedes registrarlo.{FIN}")
+        print(f"  {NEGRITA}{VERDE}{t['status_avail_desc']}{FIN}")
     elif estado == "comprado":
         print(f"  {ROJO}███████████████████████████████████████████████")
         print(f"  ██ [❌] {detalle.upper()} ██")
         print(f"  ███████████████████████████████████████████████{FIN}\n")
-        print(f"  {AMARILLO}Información del registro:{FIN}")
+        print(f"  {AMARILLO}{t['info_header']}{FIN}")
         if info["ip"]:
-            print(f"  {BLANCO}• IP de Servidor:{FIN} {CIAN}{info['ip']}{FIN}")
+            print(f"  {BLANCO}{t['info_ip']}{FIN} {CIAN}{info['ip']}{FIN}")
         if info["registrador"]:
-            print(f"  {BLANCO}• Registrado con:{FIN} {CIAN}{info['registrador']}{FIN}")
+            print(f"  {BLANCO}{t['info_registrar']}{FIN} {CIAN}{info['registrador']}{FIN}")
         if info["fecha_creacion"]:
-            print(f"  {BLANCO}• Fecha Creación:{FIN} {CIAN}{info['fecha_creacion']}{FIN}")
-        print(f"  {BLANCO}• Método de detección:{FIN} {GRIS}{info['metodo']}{FIN}")
+            print(f"  {BLANCO}{t['info_date']}{FIN} {CIAN}{info['fecha_creacion']}{FIN}")
+        print(f"  {BLANCO}{t['info_method']}{FIN} {GRIS}{info['metodo']}{FIN}")
     elif estado == "invalido":
         print(f"  {ROJO}❌ {detalle}{FIN}")
     else:
         print(f"  {AMARILLO}⚠ {detalle}{FIN}")
-        print(f"  {GRIS}Intenta buscarlo directamente en tu navegador web o proveedor DNS.{FIN}")
+        print(f"  {GRIS}{t['unknown_help']}{FIN}")
         
     print()
-    input(f"{GRIS}Presiona ENTER para regresar al menú principal...{FIN}")
+    input(f"{GRIS}{t['enter_main_menu']}{FIN}")
 
 def consulta_lote():
+    lang = CONFIG["lang"]
+    t = TEXTS[lang]
+    
     limpiar_pantalla()
     mostrar_banner()
-    print(f"\n{NEGRITA}{CIAN}╔══[ OPCIÓN 2: BÚSQUEDA EN LOTE / MASIVA ]═══════════════════╗{FIN}")
-    print(f"║ Comprueba listas grandes de dominios con alta velocidad.   ║")
-    print(f"║ Puedes usar un archivo .txt o pegar texto directamente.    ║")
+    print(f"\n{NEGRITA}{CIAN}{t['lote_title']}{FIN}")
+    print(f"{t['lote_instr_1']}")
+    print(f"{t['lote_instr_2']}")
     print(f"{CIAN}╚════════════════════════════════════════════════════════════╝{FIN}\n")
     
-    print(f"{NEGRITA}{BLANCO}¿Cómo deseas ingresar los dominios?{FIN}")
-    print(f" {CIAN}[1]{FIN} Cargar desde un archivo de texto (.txt)")
-    print(f" {CIAN}[2]{FIN} Pegar lista de dominios directamente en la consola")
+    print(f"{NEGRITA}{BLANCO}{t['lote_prompt_type']}{FIN}")
+    print(f" {CIAN}[1]{FIN} {t['lote_type_file']}")
+    print(f" {CIAN}[2]{FIN} {t['lote_type_paste']}")
     print()
     
-    opcion_ingreso = input(f"{BLANCO}👉 Selecciona una opción (1-2): {FIN}").strip()
+    opcion_ingreso = input(f"{BLANCO}{t['select_1_2']}{FIN}").strip()
     
     lineas = []
     
     if opcion_ingreso == "1":
         # Cargar desde archivo
-        ruta_archivo = input(f"\n{BLANCO}👉 Escribe el nombre o ruta del archivo (Ej: dominios.txt): {FIN}").strip()
+        ruta_archivo = input(f"\n{BLANCO}{t['file_prompt']}{FIN}").strip()
         
         if not os.path.exists(ruta_archivo):
-            crear_demo = input(f"\n{AMARILLO}⚠ El archivo '{ruta_archivo}' no existe. ¿Quieres crear un archivo demo con ejemplos? (s/n): {FIN}").lower()
-            if crear_demo == 's':
+            crear_demo = input(f"\n{AMARILLO}{t['file_not_exist'].format(ruta=ruta_archivo)}{FIN}").lower()
+            if crear_demo in ['s', 'y']:
                 ejemplos = [
                     "google.com\n", "midominioquenoexiste12345.com\n", "github.com\n", 
                     "termux-espanol-libre.net\n", "facebook.com\n", "www.youtube.com\n",
@@ -332,7 +621,7 @@ def consulta_lote():
                 ]
                 with open(ruta_archivo, "w") as f:
                     f.writelines(ejemplos)
-                print(f"{VERDE}✔ Archivo '{ruta_archivo}' creado con 8 dominios de ejemplo.{FIN}")
+                print(f"{VERDE}{t['file_demo_created'].format(ruta=ruta_archivo)}{FIN}")
             else:
                 return
 
@@ -340,15 +629,15 @@ def consulta_lote():
             with open(ruta_archivo, "r") as f:
                 lineas = f.readlines()
         except Exception as e:
-            print(f"{ROJO}❌ Error al leer el archivo: {e}{FIN}")
-            input(f"\n{GRIS}Presiona ENTER para continuar...{FIN}")
+            print(f"{ROJO}{t['file_read_error']}{e}{FIN}")
+            input(f"\n{GRIS}{t['enter_prev_menu']}{FIN}")
             return
             
     elif opcion_ingreso == "2":
         # Pegar texto directamente
-        print(f"\n{AMARILLO}👉 Pega tus dominios a continuación.{FIN}")
-        print(f"{BLANCO}Puedes separarlos por comas, espacios o saltos de línea.{FIN}")
-        print(f"{GRIS}Cuando termines, escribe {NEGRITA}{BLANCO}FIN{FIN}{GRIS} en una línea sola y presiona ENTER:{FIN}\n")
+        print(f"\n{AMARILLO}{t['paste_instr_1']}{FIN}")
+        print(f"{BLANCO}{t['paste_instr_2']}{FIN}")
+        print(f"{GRIS}{t['paste_instr_3']}{FIN}\n")
         
         lineas_pegadas = []
         while True:
@@ -356,81 +645,73 @@ def consulta_lote():
                 linea = input().strip()
                 if linea.upper() == 'FIN':
                     break
-                # También permitimos terminar con una línea vacía si ya pegaron algo y dan enter adicional
                 if linea == '' and len(lineas_pegadas) > 0:
                     break
                 if linea == '' and len(lineas_pegadas) == 0:
-                    print(f"{ROJO}Escribe tus dominios o 'FIN' para salir.{FIN}")
+                    print(f"{ROJO}{t['paste_warn']}{FIN}")
                     continue
                 lineas_pegadas.append(linea)
             except (KeyboardInterrupt, EOFError):
                 break
         
-        # Guardar en la estructura de lineas
         lineas = lineas_pegadas
         
     else:
-        print(f"\n{ROJO}❌ Opción inválida.{FIN}")
+        print(f"\n{ROJO}{t['invalid_option']}{FIN}")
         time.sleep(1)
         return
 
-    # Limpiar y normalizar dominios (soporta múltiples separadores por línea en caso de copiado con comas/espacios)
+    # Limpiar y normalizar dominios
     dominios_crudos = []
     for line in lineas:
         line_clean = line.strip()
-        # Ignorar comentarios si es un archivo o texto
         if not line_clean or line_clean.startswith('#'):
             continue
             
-        # Separar por comas, espacios o tabuladores para soportar formatos pegados continuos
         partes = re.split(r'[,\s]+', line_clean)
         for part in partes:
             dom = part.strip().lower()
-            # Limpiar protocolos y www
             dom = re.sub(r'^(https?://)?(www\.)?', '', dom)
             dom = dom.split('/')[0]
             if '.' in dom and len(dom) >= 4:
                 dominios_crudos.append(dom)
 
     total_cargados = len(dominios_crudos)
-    # Eliminar duplicados manteniendo el orden
     dominios = list(dict.fromkeys(dominios_crudos))
     total = len(dominios)
     duplicados = total_cargados - total
 
     if total == 0:
-        print(f"{ROJO}❌ No se encontraron dominios válidos para analizar.{FIN}")
-        input(f"\n{GRIS}Presiona ENTER para volver al menú anterior...{FIN}")
+        print(f"{ROJO}{t['lote_no_valid']}{FIN}")
+        input(f"\n{GRIS}{t['enter_prev_menu']}{FIN}")
         return
 
-    print(f"\n{VERDE}✔ Se procesarán {total} dominios únicos.{FIN}")
+    print(f"\n{VERDE}{t['lote_processing'].format(total=total)}{FIN}")
     if duplicados > 0:
-        print(f"{AMARILLO}💡 Se omitieron {duplicados} dominios duplicados/inválidos.{FIN}")
+        print(f"{AMARILLO}{t['lote_duplicates'].format(duplicados=duplicados)}{FIN}")
 
     # Menú de selección de modo de escaneo
-    print(f"\n{NEGRITA}{BLANCO}Selecciona el MODO DE ESCANEO para la lista:{FIN}")
-    print(f" {CIAN}[1]{FIN} {NEGRITA}Modo Ultra-Rápido (Solo DNS):{FIN}")
-    print(f"     Comprueba si el dominio resuelve IP. Inmediato, sin límites de velocidad.")
-    print(f"     Recomendado para listas gigantes (más de 100 dominios).")
-    print(f" {CIAN}[2]{FIN} {NEGRITA}Modo Híbrido Completo (DNS + WHOIS):{FIN}")
-    print(f"     Comprobación oficial de registro en bases de datos mundiales.")
-    print(f"     Recomendado para listas cortas/medianas para evitar bloqueos WHOIS.")
+    print(f"\n{NEGRITA}{BLANCO}{t['scan_mode_title']}{FIN}")
+    print(f" {CIAN}[1]{FIN} {NEGRITA}{t['scan_mode_dns_title']}{FIN}")
+    print(f"{t['scan_mode_dns_desc']}")
+    print(f" {CIAN}[2]{FIN} {NEGRITA}{t['scan_mode_hybrid_title']}{FIN}")
+    print(f"{t['scan_mode_hybrid_desc']}")
     
-    modo = input(f"\n{BLANCO}👉 Selecciona modo (1 o 2): {FIN}").strip()
+    modo = input(f"\n{BLANCO}{t['select_mode']}{FIN}").strip()
     dns_only = True if modo == "1" else False
 
-    # Configuración de retraso (delay) para WHOIS si es modo completo
+    # Configuración de retraso (delay)
     retraso = 0.0
     if not dns_only:
-        print(f"\n{AMARILLO}Para evitar que los servidores WHOIS bloqueen tu IP (Rate Limit), se aconseja un retraso:{FIN}")
+        print(f"\n{AMARILLO}{t['rate_limit_warn']}{FIN}")
         if total > 50:
-            print(f"  • Sugerido para tu lista (>50 dominios): {VERDE}1.5 a 2.0 segundos{FIN}")
+            print(t["suggest_delay_50"])
         elif total > 20:
-            print(f"  • Sugerido para tu lista (>20 dominios): {VERDE}1.0 segundo{FIN}")
+            print(t["suggest_delay_20"])
         else:
-            print(f"  • Sugerido para tu lista: {VERDE}0.4 segundos{FIN}")
+            print(t["suggest_delay_short"])
             
-        retraso_input = input(f"{BLANCO}👉 Retraso en segundos entre búsquedas [Enter para el sugerido]: {FIN}").strip()
+        retraso_input = input(f"{BLANCO}{t['delay_prompt']}{FIN}").strip()
         if retraso_input == "":
             retraso = 1.5 if total > 50 else (1.0 if total > 20 else 0.4)
         else:
@@ -439,8 +720,8 @@ def consulta_lote():
             except ValueError:
                 retraso = 0.5
 
-    guardar = input(f"\n{BLANCO}¿Quieres guardar los resultados en un archivo de texto? (s/n): {FIN}").strip().lower()
-    guardar_archivo = "resultados_dominios.txt" if guardar == 's' else None
+    guardar = input(f"\n{BLANCO}{t['save_prompt']}{FIN}").strip().lower()
+    guardar_archivo = "resultados_dominios.txt" if guardar in ['s', 'y'] else None
     
     disponibles = []
     comprados = []
@@ -448,60 +729,60 @@ def consulta_lote():
     
     if guardar_archivo:
         f_out = open(guardar_archivo, "w", encoding="utf-8")
-        f_out.write("=== RESULTADOS DE BÚSQUEDA DE DOMINIOS ===\n")
-        f_out.write(f"Fecha: {time.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f_out.write(f"Modo: {'Solo DNS (Rápido)' if dns_only else 'Híbrido DNS+WHOIS'}\n")
-        f_out.write(f"Total de dominios únicos analizados: {total}\n")
+        f_out.write(f"{t['report_header']}\n")
+        f_out.write(f"{t['report_date']}{time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        f_out.write(f"{t['report_mode']}{t['report_dns_only'] if dns_only else t['report_hybrid']}\n")
+        f_out.write(f"{t['report_total']}{total}\n")
         f_out.write("==========================================\n\n")
     
-    print(f"\n{NEGRITA}{BLANCO}{'DOMINIO':<35} {'ESTADO':<15} {'MÉTODO/DETALLE':<30}{FIN}")
+    hdr_dom = "DOMINIO" if lang == "es" else "DOMAIN"
+    hdr_est = "ESTADO" if lang == "es" else "STATUS"
+    hdr_det = "MÉTODO/DETALLE" if lang == "es" else "METHOD/DETAIL"
+    print(f"\n{NEGRITA}{BLANCO}{hdr_dom:<35} {hdr_est:<15} {hdr_det:<30}{FIN}")
     print("-" * 80)
     
     inicio_tiempo = time.time()
     
     for idx, dom in enumerate(dominios, 1):
-        # Efecto de carga por línea
-        sys.stdout.write(f"\r[{idx}/{total}] Escaneando {dom}...")
+        # Efecto de carga
+        loader_txt = t["scanning_item"].format(dom=dom)
+        sys.stdout.write(f"\r[{idx}/{total}] {loader_txt}")
         sys.stdout.flush()
         
-        # Intentar con reintento si es WHOIS y falla
         reintentos = 2 if not dns_only else 1
         estado, detalle, info = "desconocido", "Error", {}
         
         for r in range(reintentos):
-            estado, detalle, info = chequear_dominio(dom, dns_only=dns_only)
+            estado, detalle, info = chequear_dominio(dom, dns_only=dns_only, lang=lang)
             if estado != "desconocido" or dns_only:
                 break
-            # Si da error desconocido (WHOIS rate limit o red), esperar un poco y reintentar
             if r < reintentos - 1:
                 time.sleep(2.0)
         
-        # Borrar línea de carga actual
         sys.stdout.write("\r" + " " * 80 + "\r")
         
         # Formato de visualización
         if estado == "disponible":
-            status_text = f"{VERDE}DISPONIBLE{FIN}"
+            status_text = f"{VERDE}{t['gen_avail'].replace('✔ ', '')}{FIN}"
             disponibles.append(dom)
-            metodo_text = "Libre por DNS" if dns_only else "Libre (WHOIS)"
+            metodo_text = t["libre_dns"] if dns_only else t["libre_whois"]
             if guardar_archivo:
-                f_out.write(f"[✔] LIBRE: {dom:<35} | {metodo_text}\n")
+                f_out.write(f"[✔] FREE: {dom:<35} | {metodo_text}\n")
         elif estado == "comprado":
-            status_text = f"{ROJO}COMPRADO{FIN}"
+            status_text = f"{ROJO}{t['gen_taken'].replace('❌ ', '').upper()}{FIN}"
             comprados.append(dom)
             metodo_text = info.get("metodo", "DNS")
             if guardar_archivo:
-                f_out.write(f"[❌] COMPRADO: {dom:<32} | Detalle: {detalle} | IP: {info.get('ip')}\n")
+                f_out.write(f"[❌] TAKEN: {dom:<32} | {detalle} | IP: {info.get('ip')}\n")
         else:
-            status_text = f"{AMARILLO}DESCONOCIDO{FIN}"
+            status_text = f"{AMARILLO}{t['gen_unk'].replace('? ', '').upper()}{FIN}"
             desconocidos.append(dom)
             metodo_text = detalle
             if guardar_archivo:
-                f_out.write(f"[?] INSEGURO: {dom:<32} | Razón: {detalle}\n")
+                f_out.write(f"[?] UNKNOWN: {dom:<32} | {detalle}\n")
                 
         print(f"{dom:<35} {status_text:<25} {metodo_text:<30}")
         
-        # Aplicar el retraso configurado
         if idx < total:
             time.sleep(retraso if not dns_only else 0.05)
             
@@ -510,46 +791,50 @@ def consulta_lote():
     
     if guardar_archivo:
         f_out.write("\n==========================================\n")
-        f_out.write(f"Resumen del Escaneo:\n")
-        f_out.write(f" • Disponibles: {len(disponibles)}\n")
-        f_out.write(f" • Comprados: {len(comprados)}\n")
-        f_out.write(f" • Desconocidos: {len(desconocidos)}\n")
-        f_out.write(f" Tiempo total de ejecución: {duracion:.2f} segundos\n")
+        f_out.write(f"Resumen / Summary:\n")
+        f_out.write(f" • Free: {len(disponibles)}\n")
+        f_out.write(f" • Taken: {len(comprados)}\n")
+        f_out.write(f" • Unknown: {len(desconocidos)}\n")
+        f_out.write(f" Total time: {duracion:.2f}s\n")
         f_out.close()
-        print(f"\n{VERDE}✔ ¡Escaneo finalizado en {duracion:.1f}s! Resultados guardados en: {NEGRITA}{guardar_archivo}{FIN}")
+        print(f"\n{VERDE}{t['scan_finished_saved'].format(duracion=duracion, archivo=guardar_archivo)}{FIN}")
     else:
-        print(f"\n{VERDE}✔ ¡Escaneo finalizado en {duracion:.1f}s!{FIN}")
+        print(f"\n{VERDE}{t['scan_finished'].format(duracion=duracion)}{FIN}")
         
-    print(f"\n{CIAN}Resumen: {VERDE}{len(disponibles)} Disponibles{FIN} | {ROJO}{len(comprados)} Comprados{FIN} | {AMARILLO}{len(desconocidos)} Desconocidos{FIN}")
-    input(f"\n{GRIS}Presiona ENTER para regresar al menú principal...{FIN}")
+    print(t["summary_label"].format(disponibles=len(disponibles), comprados=len(comprados), desconocidos=len(desconocidos)))
+    input(f"\n{GRIS}{t['enter_main_menu']}{FIN}")
 
 def generador_dominios():
+    lang = CONFIG["lang"]
+    t = TEXTS[lang]
+    
     limpiar_pantalla()
     mostrar_banner()
-    print(f"\n{NEGRITA}{CIAN}╔══[ OPCIÓN 3: GENERADOR E IDEAS DE DOMINIOS ]═══════════════╗{FIN}")
-    print(f"║ Mezcla palabras clave con TLDs para encontrar ideas libres ║")
+    print(f"\n{NEGRITA}{CIAN}{t['gen_title']}{FIN}")
+    print(f"{t['gen_instr']}")
     print(f"{CIAN}╚════════════════════════════════════════════════════════════╝{FIN}\n")
     
-    palabra = input(f"{BLANCO}👉 Escribe una palabra clave (Ej: tecno, app, net): {FIN}").strip().lower()
+    palabra = input(f"{BLANCO}{t['gen_prompt']}{FIN}").strip().lower()
     if not palabra:
-        print(f"{ROJO}❌ Entrada vacía.{FIN}")
-        input(f"\n{GRIS}Presiona ENTER para continuar...{FIN}")
+        print(f"{ROJO}{t['gen_empty']}{FIN}")
+        input(f"\n{GRIS}{t['enter_prev_menu']}{FIN}")
         return
         
-    print(f"\n{AMARILLO}Elige las extensiones (TLDs) a combinar (Separadas por comas):{FIN}")
-    print(f"Ejemplo: {CIAN}com, net, org, co, io, es, mx{FIN}")
-    tlds_input = input(f"{BLANCO}👉 Extensiones [por defecto: com, net, co]: {FIN}").strip().lower()
+    print(f"\n{AMARILLO}{t['gen_tld_prompt']}{FIN}")
+    print(f"Ej: com, net, org, co, io, es, mx")
+    tlds_input = input(f"{BLANCO}{t['gen_tlds_default']}{FIN}").strip().lower()
     
     if not tlds_input:
         tlds = ["com", "net", "co"]
     else:
         tlds = [t.strip().replace('.', '') for t in tlds_input.split(',')]
         
-    print(f"\n{AMARILLO}Elige el estilo de combinación:{FIN}")
-    print(f"1. Palabra + sufijo (Ej: {palabra}hub, {palabra}app, {palabra}lab)")
-    print(f"2. Prefijo + palabra (Ej: super{palabra}, go{palabra}, check{palabra})")
-    print(f"3. Palabra exacta con múltiples TLDs (Ej: {palabra}.com, {palabra}.net)")
-    estilo = input(f"{BLANCO}👉 Elige una opción (1-3): {FIN}").strip()
+    print(f"\n{AMARILLO}{t['gen_style_title']}{FIN}")
+    print(t["gen_style_1"].format(palabra=palabra))
+    print(t["gen_style_2"].format(palabra=palabra))
+    print(t["gen_style_3"].format(palabra=palabra))
+    
+    estilo = input(f"{BLANCO}{t['gen_select_style']}{FIN}").strip()
     
     sufijos = ["hub", "app", "lab", "net", "tech", "web", "site", "online", "box", "soft", "dev", "ly", "fy"]
     prefijos = ["go", "get", "my", "the", "super", "neo", "mega", "pro", "easy", "cyber", "smart", "quick"]
@@ -567,81 +852,90 @@ def generador_dominios():
         for tld in tlds:
             ideas.append(f"{palabra}.{tld}")
             
-    print(f"\n{VERDE}✔ Se generaron {len(ideas)} ideas de dominios para comprobar.{FIN}")
-    confirmar = input(f"¿Quieres empezar a verificar cuáles están libres ahora mismo? (s/n): {FIN}").lower()
+    print(f"\n{VERDE}{t['gen_ready'].format(total=len(ideas))}{FIN}")
+    confirmar = input(f"{t['gen_start_check']}{FIN}").lower()
     
-    if confirmar != 's':
+    if confirmar not in ['s', 'y']:
         return
         
-    print(f"\n{NEGRITA}{BLANCO}{'DOMINIO GENERADO':<35} {'ESTADO':<15}{FIN}")
+    print(f"\n{NEGRITA}{BLANCO}{t['gen_header_dom']:<35} {t['gen_header_status']:<15}{FIN}")
     print("-" * 60)
     
     libres = 0
     for dom in ideas:
-        sys.stdout.write(f"\rComprobando {dom}...")
+        sys.stdout.write(f"\rComprobando / Checking {dom}...")
         sys.stdout.flush()
         
-        estado, detalle, _ = chequear_dominio(dom)
+        estado, detalle, _ = chequear_dominio(dom, lang=lang)
         sys.stdout.write("\r" + " " * 50 + "\r")
         
         if estado == "disponible":
-            print(f"{dom:<35} {VERDE}✔ ¡DISPONIBLE!{FIN}")
+            print(f"{dom:<35} {VERDE}{t['gen_avail']}{FIN}")
             libres += 1
         elif estado == "comprado":
-            print(f"{dom:<35} {ROJO}❌ Comprado{FIN}")
+            print(f"{dom:<35} {ROJO}{t['gen_taken']}{FIN}")
         else:
-            print(f"{dom:<35} {AMARILLO}? Desconocido{FIN}")
+            print(f"{dom:<35} {AMARILLO}{t['gen_unk']}{FIN}")
             
         time.sleep(0.5)
         
-    print(f"\n{VERDE}⭐ Fin del análisis. Encontraste {libres} dominios listos para comprar.{FIN}")
-    input(f"\n{GRIS}Presiona ENTER para regresar al menú principal...{FIN}")
+    print(f"\n{VERDE}{t['gen_summary'].format(libres=libres)}{FIN}")
+    input(f"\n{GRIS}{t['enter_main_menu']}{FIN}")
 
 def mostrar_manual():
+    lang = CONFIG["lang"]
+    t = TEXTS[lang]
     limpiar_pantalla()
     mostrar_banner()
-    manual = f"""
-{NEGRITA}{CIAN}📘 CONSEJOS E INSTRUCCIONES DE USO (Termux) {FIN}
+    
+    body = t["help_body"].format(
+        NEGRITA=NEGRITA, CIAN=CIAN, FIN=FIN, 
+        AMARILLO=AMARILLO, CURSIVA=CURSIVA, BLANCO=BLANCO
+    )
+    print(f"\n{NEGRITA}{CIAN}{t['help_title']}{FIN}")
+    print(body)
+    input(f"{GRIS}{t['enter_main_menu']}{FIN}")
 
-{NEGRITA}{AMARILLO}1. Límites de consulta (Rate Limiting){FIN}
-Los servidores WHOIS mundiales tienen protección contra spam. Si buscas 
-demasiados dominios en pocos minutos, el servidor podría bloquear temporalmente 
-las peticiones y verás el estado como "DESCONOCIDO" o "LÍMITE". 
-• {CURSIVA}Solución: Espera un par de minutos o usa una VPN/cambia de IP.{FIN}
-
-{NEGRITA}{AMARILLO}2. Dominios Especiales (.es, .ar, .cl, etc.){FIN}
-Algunos países tienen políticas WHOIS muy estrictas y no permiten consultas 
-masivas directas por sockets libres. Si no se puede verificar un TLD local, 
-el script te avisará para comprobarlo por vía DNS o manual.
-
-{NEGRITA}{AMARILLO}3. Formato del archivo para búsquedas en Lote{FIN}
-Crea tu lista en un archivo de texto plano como {CIAN}dominios.txt{FIN}.
-Cada dominio debe ir en una línea separada. Ejemplo:
-    {BLANCO}misitio.com
-    tusitio.net
-    otroweb.io{FIN}
-
-{NEGRITA}{AMARILLO}4. Licencia y Uso{FIN}
-Este script es público y 100% de código abierto. ¡Puedes usarlo y editarlo 
-para integrarlo en tus herramientas de automatización de hacking ético, 
-desarrollo web o marketing!
-"""
-    print(manual)
-    input(f"{GRIS}Presiona ENTER para volver al menú...{FIN}")
+def cambiar_idioma():
+    limpiar_pantalla()
+    mostrar_banner()
+    print(f"\n{NEGRITA}{CIAN}╔══[ SELECCIÓN DE IDIOMA / LANGUAGE SELECTION ]═════════════╗{FIN}")
+    print(f"║ Idioma actual / Current Language: {VERDE}{'Español' if CONFIG['lang'] == 'es' else 'English'}{FIN}       ║")
+    print(f"║                                                           ║")
+    print(f"║ {CIAN}[1]{FIN} Español (Spanish)                                      ║")
+    print(f"║ {CIAN}[2]{FIN} English (Official English)                              ║")
+    print(f"{CIAN}╚═══════════════════════════════════════════════════════════╝{FIN}\n")
+    
+    op = input("👉 Selecciona tu idioma / Select your language (1-2): ").strip()
+    if op == "1":
+        CONFIG["lang"] = "es"
+        guardar_configuracion()
+        print(f"\n{VERDE}✔ Idioma cambiado a Español.{FIN}")
+    elif op == "2":
+        CONFIG["lang"] = "en"
+        guardar_configuracion()
+        print(f"\n{VERDE}✔ Language changed to English.{FIN}")
+    else:
+        print(f"\n{ROJO}❌ Opción inválida / Invalid option.{FIN}")
+    time.sleep(1)
 
 def menu_principal():
     while True:
+        lang = CONFIG["lang"]
+        t = TEXTS[lang]
+        
         limpiar_pantalla()
         mostrar_banner()
-        print(f"\n{NEGRITA}{BLANCO}💻  MENÚ PRINCIPAL EN ESPAÑOL  💻{FIN}\n")
-        print(f" {CIAN}[1]{FIN} 🔍 Buscar un dominio individual")
-        print(f" {CIAN}[2]{FIN} 📂 Buscar por lote (archivo txt)")
-        print(f" {CIAN}[3]{FIN} 💡 Generador de nombres + Verificar disponibilidad")
-        print(f" {CIAN}[4]{FIN} 📘 Guía de ayuda / Consejos")
-        print(f" {CIAN}[5]{FIN} 👋 Salir del script")
+        print(f"\n{NEGRITA}{BLANCO}{t['menu_titulo']}{FIN}\n")
+        print(f" {CIAN}[1]{FIN} {t['menu_opcion_1']}")
+        print(f" {CIAN}[2]{FIN} {t['menu_opcion_2']}")
+        print(f" {CIAN}[3]{FIN} {t['menu_opcion_3']}")
+        print(f" {CIAN}[4]{FIN} {t['menu_opcion_4']}")
+        print(f" {CIAN}[5]{FIN} {t['menu_opcion_5']}")
+        print(f" {CIAN}[6]{FIN} {t['menu_opcion_6']}")
         print()
         
-        opcion = input(f"{BLANCO}👉 Selecciona una opción (1-5): {FIN}").strip()
+        opcion = input(f"{BLANCO}{t['ingresar_opcion']}{FIN}").strip()
         
         if opcion == "1":
             consulta_individual()
@@ -652,17 +946,38 @@ def menu_principal():
         elif opcion == "4":
             mostrar_manual()
         elif opcion == "5":
+            cambiar_idioma()
+        elif opcion == "6":
             limpiar_pantalla()
-            print(f"\n{VERDE}👋 ¡Gracias por usar LiberDom! Diseñado para optimizar tus proyectos.{FIN}")
-            print(f"{CIAN}¡Haz tu repositorio público y compártelo con el mundo! 🚀{FIN}\n")
+            print(f"\n{VERDE}{t['salir_mensaje']}{FIN}\n")
             sys.exit(0)
         else:
-            print(f"\n{ROJO}❌ Opción incorrecta. Inténtalo de nuevo.{FIN}")
+            print(f"\n{ROJO}{t['opcion_incorrecta']}{FIN}")
             time.sleep(1)
 
 if __name__ == "__main__":
     try:
+        cargar_configuracion()
+        # Si no existía el archivo config, preguntamos el idioma la primera vez de manera rápida
+        if not os.path.exists(CONFIG_FILE):
+            limpiar_pantalla()
+            mostrar_banner()
+            print(f"\n{NEGRITA}{CIAN}╔══[ IDIOMA / LANGUAGE ]═════════════════════════════════════╗{FIN}")
+            print(f"║ Elige tu idioma para continuar:                           ║")
+            print(f"║ Choose your language to continue:                         ║")
+            print(f"║                                                           ║")
+            print(f"║ {CIAN}[1]{FIN} Español (Spanish)                                      ║")
+            print(f"║ {CIAN}[2]{FIN} English (Official English)                              ║")
+            print(f"{CIAN}╚════════════════════════════════════════════════════════════╝{FIN}\n")
+            op = input("👉 Selecciona / Select (1-2): ").strip()
+            if op == "2":
+                CONFIG["lang"] = "en"
+            else:
+                CONFIG["lang"] = "es"
+            guardar_configuracion()
+            print(f"\n{VERDE}✔ Guardado / Saved!{FIN}")
+            time.sleep(1.0)
         menu_principal()
     except KeyboardInterrupt:
-        print(f"\n\n{ROJO}⚠ Script interrumpido por el usuario. ¡Adiós!{FIN}\n")
+        print(f"\n\n{ROJO}⚠ Script interrumpido por el usuario. ¡Adiós!{FIN}\n" if CONFIG["lang"] == "es" else f"\n\n{ROJO}⚠ Script interrupted by the user. Goodbye!{FIN}\n")
         sys.exit(0)

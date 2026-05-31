@@ -162,6 +162,59 @@ Los servidores oficiales de WHOIS limitan la cantidad de solicitudes por minuto 
 
 ---
 
+## 🌐 Soporte Multi-idioma (i18n) / Multi-language Support
+
+¡LiberDom ahora es **internacional**! Hemos implementado un sistema completo de internacionalización (i18n) en la versión de terminal de Termux (CLI) y en el panel web visual, permitiendo alternar idioma sin reiniciar.
+
+### 📊 Estadísticas y Estado de Traducción
+
+| Idioma | Código ISO | CLI (Termux) | Web App | Estado |
+| :--- | :---: | :---: | :---: | :--- |
+| 🇪🇸 Español | `es` | `100%` | `100%` | Completado (Nativo) |
+| 🇺🇸 Inglés | `en` | `100%` | `100%` | Completado (Oficial) |
+
+---
+
+### ✍️ Cómo Contribuir con Nuevos Idiomas (How to Translate)
+
+¡Cualquier aporte para traducir LiberDom a nuevos idiomas (como Portugués, Francés, Italiano, etc.) es sumamente apreciado!
+
+#### 1. En la versión de Consola CLI:
+Abre el archivo [liberdom.py](liberdom.py) y agrega la traducción de tu idioma al diccionario `TEXTS`:
+```python
+TEXTS = {
+    "es": { ... },
+    "en": { ... },
+    "tu_codigo_iso": {
+        "banner_sub": "¡Mensaje de banner!",
+        # Traduce cada una de las claves de texto...
+    }
+}
+```
+
+#### 2. En la versión Web:
+- Abre el archivo [web/static/script.js](web/static/script.js) y agrega tu idioma al diccionario `translations`:
+```javascript
+const translations = {
+    es: { ... },
+    en: { ... },
+    tu_codigo_iso: {
+        "nav.single": "Individual (Translated)",
+        # Traduce cada una de las claves correspondientes...
+    }
+};
+```
+- Abre el archivo [web/templates/index.html](web/templates/index.html) y agrega tu opción al dropdown de la barra superior:
+```html
+<div class="lang-dropdown" id="lang-dropdown">
+    <button class="lang-option" data-lang="es"><span class="flag">🇪🇸</span> Español</button>
+    <button class="lang-option" data-lang="en"><span class="flag">🇺🇸</span> English (Official)</button>
+    <button class="lang-option" data-lang="tu_codigo_iso"><span class="flag">🏳️</span> Tu Idioma</button>
+</div>
+```
+
+---
+
 ## 🤝 Contribuciones y Soporte
 
 ¡Este proyecto es 100% libre y público! Si te ayudó en tus proyectos o te gusta:
