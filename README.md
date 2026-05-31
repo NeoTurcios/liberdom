@@ -116,6 +116,33 @@ graph TD
 
 ---
 
+## 🌐 Versión Web Premium (Visual & Masiva)
+
+¡LiberDom ahora cuenta con una interfaz web moderna, responsiva e interactiva! Ubicada en la carpeta `/web/` de este repositorio.
+
+### Características de la Versión Web:
+*   🖥️ **Estética de Vanguardia:** Interfaz con efectos de neón flotantes, paneles de vidrio esmerilado (glassmorphism) y modo oscuro premium.
+*   ⚡ **Búsqueda Masiva en Paralelo:** El escáner masivo de la web procesa múltiples consultas de dominios de forma simultánea mediante peticiones JavaScript optimizadas en paralelo, inyectando tarjetas visuales a medida que terminan.
+*   💾 **Exportación Directa:** Descarga reportes completos de disponibilidad de dominios en archivos `.txt` generados al instante.
+
+### Cómo ejecutar la versión web localmente:
+1.  **Ingresa a la carpeta web:**
+    ```bash
+    cd web
+    ```
+2.  **Instala las dependencias (Flask):**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Inicia el servidor Flask:**
+    ```bash
+    python app.py
+    ```
+4.  **Abre en tu navegador:**
+    Ingresa a la dirección local [http://127.0.0.1:5000](http://127.0.0.1:5000) en cualquier navegador web.
+
+---
+
 ## ⚠️ Consejos Importantes (Rate Limiting)
 
 Los servidores oficiales de WHOIS limitan la cantidad de solicitudes por minuto para evitar abusos de red (Spam).

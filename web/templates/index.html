@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiberDom - Detector y Buscador de Dominios Premium</title>
+    <meta name="description" content="Verifica la disponibilidad de dominios de forma gratuita, ultrarrápida y libre de límites de velocidad. Optimizado para Termux y la web.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Emojis/Iconos modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Hoja de estilos premium -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Fondo con luces de neón difuminadas -->
+    <div class="bg-glow">
+        <div class="glow-sphere green-glow"></div>
+        <div class="glow-sphere purple-glow"></div>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-compass-drafting"></i>
+                </div>
+                <h1 id="brand-title">Liber<span>Dom</span></h1>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn active" data-tab="single"><i class="fa-solid fa-search"></i> Individual</button>
+                <button class="tab-btn" data-tab="bulk"><i class="fa-solid fa-layer-group"></i> Masivo (Pegar)</button>
+                <button class="tab-btn" data-tab="cli"><i class="fa-solid fa-terminal"></i> Guía Termux</button>
+            </nav>
+            <div class="header-actions">
+                <a href="https://github.com/NeoTurcios/liberdom" target="_blank" class="github-link">
+                    <i class="fa-brands fa-github"></i> Código Abierto
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+
+            <!-- SECCIÓN 1: BÚSQUEDA INDIVIDUAL -->
+            <section id="tab-single" class="tab-panel active">
+                <div class="hero-section">
+                    <h2 class="hero-title">Encuentra tu próximo dominio de internet</h2>
+                    <p class="hero-subtitle">Búsqueda directa e híbrida DNS/WHOIS de bajo nivel sin intermediarios ni cobros.</p>
+                </div>
+
+                <div class="search-box-container">
+                    <form id="single-search-form" class="search-form">
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-globe input-icon"></i>
+                            <input type="text" id="single-domain-input" placeholder="Introduce tu dominio... (ej: miweb.com, proyecto.co)" required autocomplete="off">
+                        </div>
+                        <button type="submit" id="search-submit-btn" class="glow-button">
+                            <span>Comprobar disponibilidad</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contenedor de Resultados del Dominio Individual -->
+                <div id="single-result-wrapper" class="result-wrapper">
+                    <!-- Las tarjetas de resultado se inyectan dinámicamente con JS -->
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 2: BÚSQUEDA MASIVA (PEGAR TEXTO) -->
+            <section id="tab-bulk" class="tab-panel">
+                <div class="hero-section">
+                    <h2 class="hero-title">Escáner masivo de dominios</h2>
+                    <p class="hero-subtitle">Pega una lista de palabras, dominios o texto libre. Los procesamos en paralelo en segundos.</p>
+                </div>
+
+                <div class="bulk-container glass-card">
+                    <div class="bulk-form-group">
+                        <label for="bulk-textarea" class="form-label">
+                            <i class="fa-solid fa-paste"></i> Pega tu lista de dominios aquí:
+                        </label>
+                        <textarea id="bulk-textarea" placeholder="google.com&#10;github.com, facebook.com&#10;http://misitioquenoexiste99.org&#10;# Puedes separar por comas, espacios o saltos de línea..."></textarea>
+                    </div>
+
+                    <div class="bulk-settings">
+                        <div class="setting-item">
+                            <label for="scan-mode" class="setting-label">Método de análisis:</label>
+                            <select id="scan-mode" class="setting-select">
+                                <option value="dns_only">Modo Ultra-Rápido (Solo DNS - Sin límites)</option>
+                                <option value="hybrid" selected>Modo Preciso (DNS + WHOIS - Híbrido)</option>
+                            </select>
+                        </div>
+                        <button id="start-bulk-btn" class="glow-button green">
+                            <i class="fa-solid fa-play"></i> Iniciar escaneo masivo
+                        </button>
+                    </div>
+
+                    <!-- Panel de Progreso del Escaneo Masivo -->
+                    <div id="bulk-progress-panel" class="progress-panel">
+                        <div class="progress-info">
+                            <span id="progress-text">Procesando: 0 / 0 dominios</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                        </div>
+                        <div class="progress-stats">
+                            <span class="stat-badge stat-available"><i class="fa-solid fa-check-circle"></i> Disponibles: <strong id="stat-avail-count">0</strong></span>
+                            <span class="stat-badge stat-taken"><i class="fa-solid fa-times-circle"></i> Ocupados: <strong id="stat-taken-count">0</strong></span>
+                            <span class="stat-badge stat-unknown"><i class="fa-solid fa-question-circle"></i> Dudosos: <strong id="stat-unk-count">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rejilla de Resultados del Escaneo Masivo -->
+                <div class="bulk-results-section">
+                    <div class="results-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Resultados en tiempo real:</h3>
+                        <button id="download-results-btn" class="download-btn disabled" disabled>
+                            <i class="fa-solid fa-file-arrow-down"></i> Descargar reporte (.txt)
+                        </button>
+                    </div>
+                    <div id="bulk-results-grid" class="results-grid">
+                        <div class="empty-state">
+                            <i class="fa-solid fa-server"></i>
+                            <p>Pega tus dominios arriba y haz clic en iniciar para ver las tarjetas aquí.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- SECCIÓN 3: GUÍA DE TERMUX / CLI -->
+            <section id="tab-cli" class="tab-panel">
+                <div class="hero-section">
+                    <h2 class="hero-title">LiberDom en tu bolsillo con Termux</h2>
+                    <p class="hero-subtitle">Cómo instalar y correr la versión CLI rápida optimizada para celulares Android.</p>
+                </div>
+
+                <div class="cli-guide-grid">
+                    <!-- Tarjeta 1: Comando de Instalación -->
+                    <div class="glass-card cli-step-card">
+                        <div class="card-header">
+                            <span class="step-num">1</span>
+                            <h3>Instalación en un solo comando</h3>
+                        </div>
+                        <p>Abre Termux en tu Android, copia la línea de abajo y pégala directamente para instalar todo el entorno de forma automática:</p>
+                        <div class="code-box">
+                            <code id="code-install">pkg install git -y && git clone https://github.com/NeoTurcios/liberdom.git && cd liberdom && chmod +x install.sh && ./install.sh</code>
+                            <button class="copy-code-btn" data-target="code-install">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 2: Lanzamiento -->
+                    <div class="glass-card cli-step-card">
+                        <div class="card-header">
+                            <span class="step-num">2</span>
+                            <h3>Cómo ejecutar la aplicación CLI</h3>
+                        </div>
+                        <p>Una vez completado el instalador, puedes arrancar la herramienta en cualquier momento desde cualquier carpeta escribiendo:</p>
+                        <div class="code-box">
+                            <code id="code-run">liberdom</code>
+                            <button class="copy-code-btn" data-target="code-run">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <p class="helper-text"><i class="fa-solid fa-info-circle"></i> Se creará un alias directo en los binarios de tu terminal.</p>
+                    </div>
+
+                    <!-- Tarjeta 3: Características de la consola -->
+                    <div class="glass-card cli-step-card span-two-cols">
+                        <h3><i class="fa-solid fa-shield-halved"></i> ¿Por qué usar la versión CLI de Termux?</h3>
+                        <ul class="features-list-web">
+                            <li><i class="fa-solid fa-bolt"></i> **Mayor rendimiento:** Sin renderizado de navegadores, ideal para terminales antiguas.</li>
+                            <li><i class="fa-solid fa-file-import"></i> **Carga física de archivos:** Procesa directamente archivos locales `.txt` que tengas guardados en tu almacenamiento.</li>
+                            <li><i class="fa-solid fa-microchip"></i> **Consumo nulo de datos extra:** Consultas directas socket-a-socket sin recargas visuales pesadas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Diseñado con amor y código abierto por <strong>NeoTurcios</strong> | Licencia MIT © 2026</p>
+        </footer>
+
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
