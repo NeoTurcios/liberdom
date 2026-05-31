@@ -108,6 +108,35 @@ liberdom
 
 ---
 
+## 📱 Cliente Android Nativo (Premium & SDK 36 / Android 16)
+
+¡LiberDom ahora tiene una **aplicación móvil nativa** de alto rendimiento en la carpeta `/android/`! Desarrollada bajo estándares modernos de Google para teléfonos inteligentes.
+
+*   ⚡ **Rendimiento Nativo Puro:** Escrita completamente en **Kotlin nativo**, portando la lógica del motor híbrido DNS y sockets TCP directo a hilos asíncronos (`Thread` de Android). ¡Sin dependencias externas ni intermediarios lentos!
+*   🎯 **Android 16 de Vanguardia (SDK 36):** Compilada para soportar los dispositivos del futuro (target SDK 36) y con soporte retrospectivo (min SDK 26).
+*   🌐 **Control de Idioma i18n Dinámico:** Integra un botón visual para conmutar el idioma de la interfaz (Español/Inglés) al vuelo con persistencia local.
+*   🎨 **Diseño Moderno Oscuro:** Tarjetas interactivas con bordes neón iluminados según el estado del dominio (verde para Libre, rojo para Ocupado, amarillo para Desconocido) alineado al diseño web glassmorphism.
+
+<details>
+<summary>📦 Compilación Local y Workflow Integrado</summary>
+<br>
+
+El proyecto incluye un **Workflow de GitHub Actions** automatizado en `.github/workflows/android.yml` que compila la aplicación y genera un **APK Debug listo para descargar** en cada push/pull request.
+
+### Para compilar manualmente en tu computadora:
+1. **Abre la carpeta del proyecto Android:**
+   ```bash
+   cd android
+   ```
+2. **Genera los binarios con Gradle:**
+   ```bash
+   ./gradlew assembleDebug
+   ```
+3. El archivo resultante estará ubicado en: `app/build/outputs/apk/debug/app-debug.apk`.
+</details>
+
+---
+
 ## 🌐 Versión Web Premium (Visual & Masiva)
 
 ¡Ahora también disponible con una increíble y moderna interfaz gráfica web responsiva! Ubicada en la carpeta `/web/` de este repositorio.

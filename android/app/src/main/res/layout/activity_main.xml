@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#070b13"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:src="@drawable/ic_launcher"
+                android:contentDescription="LiberDom Logo" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="LiberDom"
+                android:textColor="#ffffff"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-black"
+                android:layout_marginStart="12dp" />
+
+            <!-- Language Button -->
+            <Button
+                android:id="@+id/btnLangToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🇺🇸 EN"
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:backgroundTint="#131926"
+                app:cornerRadius="10dp"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+        </LinearLayout>
+
+        <!-- HERO TITLES -->
+        <TextView
+            android:id="@+id/txtHeroTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Encuentra tu próximo dominio"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
+
+        <TextView
+            android:id="@+id/txtHeroSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Búsqueda directa e híbrida DNS/WHOIS de bajo nivel sin intermediarios ni cobros."
+            android:textColor="#9ca3af"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintTop_toBottomOf="@id/txtHeroTitle"/>
+
+        <!-- INPUT BOX -->
+        <LinearLayout
+            android:id="@+id/searchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/txtHeroSubtitle">
+
+            <EditText
+                android:id="@+id/edtDomainInput"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/search_input_background"
+                android:hint="Introduce tu dominio... (ej: miweb.com)"
+                android:textColorHint="#4b5563"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:paddingHorizontal="16dp"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:inputType="textUri"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/btnCheck"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Comprobar disponibilidad"
+                android:textColor="#070b13"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:background="@drawable/search_button_background"
+                app:backgroundTint="@null" />
+
+        </LinearLayout>
+
+        <!-- LOADER -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:indeterminateTint="#00e676"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/searchContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/txtLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#9ca3af"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/progressBar"/>
+
+        <!-- RESULTS CARD -->
+        <LinearLayout
+            android:id="@+id/cardResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_background_default"
+            android:padding="20dp"
+            android:visibility="gone"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/searchContainer">
+
+            <!-- Card Top Header -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/txtResultDomain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MIDOMINIO.COM"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true" />
+
+                <TextView
+                    android:id="@+id/txtResultBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disponible"
+                    android:textColor="#00e676"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:background="#1a00e676"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true" />
+
+            </RelativeLayout>
+
+            <!-- Status description message -->
+            <TextView
+                android:id="@+id/txtResultDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="¡Felicidades! Este dominio está libre. Puedes registrarlo ahora mismo en tu proveedor favorito."
+                android:textColor="#00e676"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginBottom="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1fffffff"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Row 1: Technical Status -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lblTechnicalStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Estado Técnico:"
+                    android:textColor="#9ca3af"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtTechnicalStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disponible para registro"
+                    android:textColor="#ffffff"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Row 2: Server IP -->
+            <LinearLayout
+                android:id="@+id/rowIp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lblServerIp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="IP del Servidor:"
+                    android:textColor="#9ca3af"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtServerIp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="142.250.191.46"
+                    android:textColor="#ffffff"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Row 3: Registrar -->
+            <LinearLayout
+                android:id="@+id/rowRegistrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lblRegistrar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Registrador:"
+                    android:textColor="#9ca3af"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtRegistrar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google LLC"
+                    android:textColor="#ffffff"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Row 4: Creation Date -->
+            <LinearLayout
+                android:id="@+id/rowCreated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/lblCreationDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fecha de Creación:"
+                    android:textColor="#9ca3af"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtCreationDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1997-09-15"
+                    android:textColor="#ffffff"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Row 5: Method -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lblMethod"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Método de Detección:"
+                    android:textColor="#9ca3af"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtMethod"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Consulta WHOIS Socket 43"
+                    android:textColor="#8b5cf6"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:fontFamily="monospace" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- FOOTER -->
+        <TextView
+            android:id="@+id/txtFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Diseñado con amor y código abierto por NeoTurcios\nLicencia MIT © 2026"
+            android:textColor="#4b5563"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@id/cardResult"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
