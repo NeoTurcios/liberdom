@@ -83,8 +83,7 @@
                 <ProgressBar
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:indeterminateTint="#00e676"
-                    android:strokeWidth="2dp"/>
+                    android:indeterminateTint="#00e676"/>
                     
                 <TextView
                     android:id="@+id/txtIslandStatus"
