@@ -173,13 +173,13 @@ La mayoría de scripts de detección usan APIs de terceros limitadas o de pago. 
 
 ```mermaid
 flowchart TD
-    A["Inicio: Dominio"] --> B["Paso 1: Resolución DNS"]
-    B -->|Tiene IP| C["Comprado (DNS)"]
-    B -->|Sin IP| D["Paso 2: Consulta WHOIS (Puerto 43)"]
-    D --> E{"¿Registrado?"}
-    E -->|Disponible| F["¡DISPONIBLE!"]
-    E -->|Comprado| G["Comprado (WHOIS)"]
-    E -->|Error/Límite| H["Desconocido (Manual)"]
+    A[Inicio: Dominio] --> B[Paso 1: Resolucion DNS]
+    B -->|Tiene IP| C[Comprado por DNS]
+    B -->|Sin IP| D[Paso 2: Consulta WHOIS]
+    D --> E{Registrado}
+    E -->|No| F[Disponible]
+    E -->|Si| G[Comprado por WHOIS]
+    E -->|Error| H[Desconocido]
 ```
 
 ---
