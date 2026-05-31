@@ -10,7 +10,7 @@
 <p align="center">
   <a href="https://termux.com/"><img src="https://img.shields.io/badge/Platform-Termux%20%7C%20Linux-00e676?style=flat-square&logo=android&logoColor=white" alt="Platform"></a>
   <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.7+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-MIT-8b5cf6?style=flat-square" alt="License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licencia-No_Comercial-8b5cf6?style=flat-square" alt="License"></a>
   <a href="README.md"><img src="https://img.shields.io/badge/Idioma-Espa%C3%B1ol%20%F0%9F%87%AA%F0%9F%87%B8-ff1744?style=flat-square" alt="Language"></a>
 </p>
 

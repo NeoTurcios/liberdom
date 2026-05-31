@@ -348,7 +348,7 @@
             android:id="@+id/txtFooter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Diseñado con amor y código abierto por NeoTurcios\nLicencia MIT © 2026"
+            android:text="Diseñado con amor y código abierto por NeoTurcios\nLicencia No Comercial © 2026"
             android:textColor="#4b5563"
             android:textSize="12sp"
             android:gravity="center"

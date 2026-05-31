@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
             lblRegistrar.text = "Registrador:"
             lblCreationDate.text = "Fecha de Creación:"
             lblMethod.text = "Método de Detección:"
-            txtFooter.text = "Diseñado con amor y código abierto por NeoTurcios\nLicencia MIT © 2026"
+            txtFooter.text = "Diseñado con amor y código abierto por NeoTurcios\nLicencia No Comercial © 2026"
         } else {
             btnLangToggle.text = "🇪🇸 ES"
             txtHeroTitle.text = "Find your next domain"
@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             lblRegistrar.text = "Registrar:"
             lblCreationDate.text = "Creation Date:"
             lblMethod.text = "Detection Method:"
-            txtFooter.text = "Designed with love and open source by NeoTurcios\nMIT License © 2026"
+            txtFooter.text = "Designed with love and open source by NeoTurcios\nNon-Commercial License © 2026"
         }
 
         // Si la tarjeta de resultados está abierta, actualizar sus etiquetas estáticas

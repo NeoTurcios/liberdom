@@ -1,21 +1,49 @@
-MIT License
+================================================================================
+LICENCIA LIBERDOM - LICENCIA DE USO NO COMERCIAL Y ATRIBUCIÓN OBLIGATORIA
+================================================================================
+Copyright (c) 2026 NeoTurcios
 
-Copyright (c) 2026
+Por la presente, se concede permiso a cualquier persona que obtenga una copia de 
+este software ("LiberDom") para utilizar, modificar y resubir el código fuente bajo 
+las siguientes condiciones obligatorias:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. PROHIBICIÓN DE USO COMERCIAL (NON-COMMERCIAL USE ONLY):
+   Queda estrictamente prohibido vender, alquilar, sublicenciar, comercializar o usar 
+   este software o cualquier parte de su código fuente para beneficio comercial directo 
+   o indirecto. Este proyecto es y debe seguir siendo 100% gratuito y de código abierto.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. ATRIBUCIÓN OBLIGATORIA (ATTRIBUTION REQUIREMENT):
+   Si modifica, recompila, redistribuye o publica este software (incluyendo la versión
+   CLI, Web o la aplicación móvil APK), debe mantener obligatoriamente de forma visible 
+   dentro de la interfaz del usuario (pantallas, secciones de ayuda o footers) el enlace
+   al repositorio original de GitHub: https://github.com/NeoTurcios/liberdom.git
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. PERMISO DE MODIFICACIÓN:
+   Se permite modificar el logotipo, el nombre de la aplicación, el diseño visual,
+   el paquete Android y agregar o alterar funciones del software siempre y cuando se
+   respeten los puntos 1 y 2.
+
+--------------------------------------------------------------------------------
+LIBERDOM LICENSE - NON-COMMERCIAL & ATTRIBUTION REQUIREMENT LICENSE
+--------------------------------------------------------------------------------
+Copyright (c) 2026 NeoTurcios
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software ("LiberDom") to use, modify, and redistribute the source code under 
+the following binding conditions:
+
+1. NON-COMMERCIAL USE ONLY:
+   It is strictly prohibited to sell, rent, sublicense, monetize, or use this software
+   or any part of its source code for direct or indirect commercial purposes. This project
+   is and must remain 100% free and open-source.
+
+2. ATTRIBUTION REQUIREMENT:
+   If you modify, recompile, redistribute, or publish this software (including CLI,
+   Web, or APK Android mobile application), you must prominently display a visible link 
+   to the original GitHub repository inside the user interface (screens, help sections, 
+   or footers): https://github.com/NeoTurcios/liberdom.git
+
+3. MODIFICATION ALLOWED:
+   You are allowed to customize the logo, app name, package name, visual design, and add
+   or alter software features as long as conditions 1 and 2 are fully respected.
+================================================================================

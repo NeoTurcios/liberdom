@@ -53,7 +53,7 @@ const translations = {
         "cli.step3_item2": '<i class="fa-solid fa-file-import"></i> <strong>Carga física de archivos:</strong> Procesa directamente archivos locales `.txt` que tengas guardados en tu almacenamiento.',
         "cli.step3_item3": '<i class="fa-solid fa-microchip"></i> <strong>Consumo nulo de datos extra:</strong> Consultas directas socket-a-socket sin recargas visuales pesadas.',
         
-        "footer.text": "Diseñado con amor y código abierto por <strong>NeoTurcios</strong> | Licencia MIT © 2026",
+        "footer.text": "Diseñado con amor y código abierto por <strong>NeoTurcios</strong> | Licencia No Comercial © 2026",
         
         // Cadenas de traducción internas de JS
         "js.querying": "Consultando base de datos mundial para {domain}...",
@@ -148,7 +148,7 @@ const translations = {
         "cli.step3_item2": '<i class="fa-solid fa-file-import"></i> <strong>Physical file upload:</strong> Directly process local `.txt` files saved in your storage.',
         "cli.step3_item3": '<i class="fa-solid fa-microchip"></i> <strong>Zero extra data consumption:</strong> Direct socket-to-socket queries without heavy visual reloads.',
         
-        "footer.text": "Designed with love and open source by <strong>NeoTurcios</strong> | MIT License © 2026",
+        "footer.text": "Designed with love and open source by <strong>NeoTurcios</strong> | Non-Commercial License © 2026",
         
         // JS internal translations
         "js.querying": "Querying global database for {domain}...",
