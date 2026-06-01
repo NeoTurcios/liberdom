@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenFind AI - Generador y Escáner Inteligente de Dominios</title>
-    <meta name="description" content="Generador autónomo e inteligente de dominios con memoria local, escáner DNS client-side sin límites, versión CLI de Termux y App premium para Android.">
+    <title>OpenFind AI - Ecosistema Autónomo de Dominios</title>
+    <meta name="description" content="El detector y buscador híbrido de dominios más potente. Conoce el cliente Android nativo con Agente IA, la versión CLI para Termux y el Bot autónomo de Telegram.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,15 +34,15 @@
             </div>
             
             <nav class="nav-tabs">
-                <button class="tab-btn active" data-tab="generator" data-i18n="nav.generator"><i class="fa-solid fa-wand-magic-sparkles"></i> Generador IA</button>
-                <button class="tab-btn" data-tab="fastcheck" data-i18n="nav.fastcheck"><i class="fa-solid fa-circle-check"></i> Escáner DNS</button>
-                <button class="tab-btn" data-tab="androidapp" data-i18n="nav.androidapp"><i class="fa-solid fa-mobile-screen-button"></i> App Android</button>
-                <button class="tab-btn" data-tab="termuxcli" data-i18n="nav.termuxcli"><i class="fa-solid fa-terminal"></i> Termux CLI</button>
-                <button class="tab-btn" data-tab="about" data-i18n="nav.about"><i class="fa-solid fa-user-gear"></i> Nosotros</button>
+                <a href="#hero" class="tab-link active" data-i18n="nav.start"><i class="fa-solid fa-house"></i> Inicio</a>
+                <a href="#android" class="tab-link" data-i18n="nav.androidapp"><i class="fa-solid fa-mobile-screen-button"></i> App Android</a>
+                <a href="#cli" class="tab-link" data-i18n="nav.termuxcli"><i class="fa-solid fa-terminal"></i> Termux CLI</a>
+                <a href="#bot" class="tab-link" data-i18n="nav.bot"><i class="fa-solid fa-robot"></i> Bot Bot</a>
+                <a href="#about" class="tab-link" data-i18n="nav.about"><i class="fa-solid fa-user-gear"></i> Nosotros</a>
             </nav>
 
             <div class="header-actions">
-                <!-- Selector de Idioma redondeado -->
+                <!-- Selector de Idioma -->
                 <div class="lang-selector-container">
                     <button class="lang-selector-btn" id="lang-btn">
                         <i class="fa-solid fa-globe"></i> <span id="current-lang-label">Español</span> <i class="fa-solid fa-chevron-down"></i>
@@ -58,242 +58,160 @@
             </div>
         </header>
 
-        <!-- Contenido principal -->
+        <!-- Contenido principal (Landing Showcase) -->
         <main class="main-content">
 
-            <!-- PESTAÑA 1: GENERADOR IA AUTÓNOMO (LOCAL AGENT) -->
-            <section id="tab-generator" class="tab-panel active">
-                <div class="hero-section">
-                    <h2 class="hero-title" data-i18n="gen.title">Generador de Dominios Inteligente y Autónomo</h2>
-                    <p class="hero-subtitle" data-i18n="gen.subtitle">Crea ideas corporativas y creativas que se analizan en milisegundos con nuestro Agente IA local 100% libre de APIs externas.</p>
-                </div>
-
-                <div class="generator-layout">
-                    <!-- Configuración del Generador -->
-                    <div class="glass-card generator-config">
-                        <h3 class="panel-subtitle" data-i18n="gen.config_title"><i class="fa-solid fa-sliders"></i> Ajustes de Generación</h3>
-                        
-                        <div class="form-group">
-                            <label for="gen-keyword" data-i18n="gen.label_keyword">Palabra Clave o Idea Inicial:</label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-lightbulb input-icon"></i>
-                                <input type="text" id="gen-keyword" placeholder="Ej: neo, galaxy, cloud..." required autocomplete="off">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gen-style" data-i18n="gen.label_style">Estilo de Marca:</label>
-                            <select id="gen-style" class="setting-select">
-                                <option value="ai" selected data-i18n="gen.style_ai">💡 Creativo & Inteligencia Artificial</option>
-                                <option value="corp" data-i18n="gen.style_corp">🏢 Corporativo & Elegante (Galaxy Style)</option>
-                                <option value="short" data-i18n="gen.style_short">⚡ Ultra-Moderno & Corto (Yi Style)</option>
-                                <option value="geek" data-i18n="gen.style_geek">🤖 Tecnológico & Geek</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gen-tld" data-i18n="gen.label_tld">Extensión (TLD):</label>
-                            <select id="gen-tld" class="setting-select">
-                                <option value="all" selected data-i18n="gen.tld_all">Todas las Extensiones Modernas</option>
-                                <option value="ai">.ai (Inteligencia Artificial)</option>
-                                <option value="io">.io (Tecnología/Startups)</option>
-                                <option value="com">.com (Corporativo Global)</option>
-                                <option value="net">.net (Infraestructura)</option>
-                                <option value="co">.co (Comunidades/Moderno)</option>
-                            </select>
-                        </div>
-
-                        <button id="btn-generate" class="glow-button purple">
-                            <span>🤖 Generar con IA Local</span>
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </button>
-                    </div>
-
-                    <!-- Panel de Resultados con Agente -->
-                    <div class="generator-results">
-                        <div class="results-header-box">
-                            <h3 class="panel-subtitle" data-i18n="gen.ideas_title"><i class="fa-solid fa-robot"></i> Recomendaciones de la IA</h3>
-                            <div class="memory-indicator" id="memory-counter-badge">
-                                <i class="fa-solid fa-memory"></i> <span data-i18n="gen.memory">Memoria Local</span>: <strong id="saved-count">0</strong>/10
-                            </div>
-                        </div>
-
-                        <div id="generator-ideas-grid" class="ideas-grid">
-                            <div class="empty-state">
-                                <i class="fa-solid fa-brain"></i>
-                                <p data-i18n="gen.empty_text">Ingresa una palabra clave a la izquierda y presiona Generar para despertar al Agente Autónomo.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lista de Dominios Guardados (Memoria) -->
-                <div class="saved-domains-section glass-card">
-                    <div class="saved-header">
-                        <h3 class="panel-subtitle"><i class="fa-solid fa-bookmark"></i> <span data-i18n="gen.saved_title">Biblioteca de Favoritos Guardados</span> (<strong id="saved-count-2">0</strong>/10)</h3>
-                        <button id="btn-clear-saved" class="clear-btn disabled" disabled><i class="fa-solid fa-trash-can"></i> <span data-i18n="gen.clear_btn">Limpiar Todo</span></button>
-                    </div>
-                    <div id="saved-domains-list" class="saved-list">
-                        <div class="empty-saved-state">
-                            <p data-i18n="gen.empty_saved">No tienes dominios guardados en la memoria persistente de tu navegador. Guarda tus preferidos desde la lista de recomendaciones.</p>
-                        </div>
+            <!-- SECCIÓN 1: HERO DE BIENVENIDA -->
+            <section id="hero" class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-badge" data-i18n="hero.badge"><i class="fa-solid fa-sparkles"></i> Ecosistema 100% Autónomo & Local</div>
+                    <h2 class="hero-title" data-i18n="hero.title">Búsqueda Inteligente de Dominios a Nivel de Red</h2>
+                    <p class="hero-subtitle" data-i18n="hero.subtitle">El motor híbrido definitivo que combina resolución DNS ultrarrápida, sockets TCP recursivos WHOIS y agentes locales de marca. Diseñado para Android, terminales Termux y Telegram.</p>
+                    
+                    <div class="hero-action-buttons">
+                        <a href="#android" class="glow-button purple"><i class="fa-solid fa-mobile-screen-button"></i> <span data-i18n="hero.btn_android">Ver App Android</span></a>
+                        <a href="#cli" class="outline-btn"><i class="fa-solid fa-terminal"></i> <span data-i18n="hero.btn_cli">Ver Termux CLI</span></a>
                     </div>
                 </div>
             </section>
 
-
-            <!-- PESTAÑA 2: ESCÁNER RÁPIDO DNS CLIENT-SIDE (PROCESAMIENTO RÁPIDO) -->
-            <section id="tab-fastcheck" class="tab-panel">
-                <div class="hero-section">
-                    <h2 class="hero-title" data-i18n="fast.title">Escáner Masivo DNS en Paralelo</h2>
-                    <p class="hero-subtitle" data-i18n="fast.subtitle">Pega una lista de palabras o dominios. Consultamos en paralelo a través de DNS-over-HTTPS (DoH) sin límites de velocidad.</p>
-                </div>
-
-                <div class="bulk-container glass-card">
-                    <div class="bulk-form-group">
-                        <label for="bulk-textarea" class="form-label">
-                            <i class="fa-solid fa-paste"></i> <span data-i18n="fast.label">Pega tus dominios o palabras clave:</span>
-                        </label>
-                        <textarea id="bulk-textarea" placeholder="google.com&#10;github.com, neopunto.com&#10;misitiolibrequeinvente.net&#10;# Puedes separar por comas o saltos de línea..."></textarea>
+            <!-- SECCIÓN 2: GRID DE HERRAMIENTAS CORE (Ecosistema) -->
+            <section class="tools-grid-section">
+                <h3 class="section-main-title" data-i18n="tools.section_title"><i class="fa-solid fa-cubes"></i> El Ecosistema OpenFind AI</h3>
+                <div class="tools-grid">
+                    
+                    <!-- Tarjeta 1: App Android -->
+                    <div class="glass-card tool-card">
+                        <div class="tool-icon-wrapper android"><i class="fa-solid fa-mobile-screen"></i></div>
+                        <h4 class="tool-card-title">OpenFind Android</h4>
+                        <p class="tool-card-desc" data-i18n="tools.android_desc">Cliente premium nativo para teléfonos Android. Incluye evaluación semántica local, biblioteca persistente limitada y visualizaciones neón en tiempo real.</p>
+                        <a href="#android" class="tool-learn-more"><span data-i18n="tools.learn_more">Explorar detalles</span> <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
 
-                    <div class="bulk-settings">
-                        <div class="setting-item">
-                            <label for="scan-dns-provider" class="setting-label" data-i18n="fast.provider">Servidor DNS Seguro:</label>
-                            <select id="scan-dns-provider" class="setting-select">
-                                <option value="cloudflare" selected>Cloudflare Secure DNS (Recomendado)</option>
-                                <option value="google">Google Public DNS</option>
-                            </select>
-                        </div>
-                        <button id="start-bulk-btn" class="glow-button green">
-                            <i class="fa-solid fa-play"></i> <span data-i18n="fast.start_btn">Iniciar escaneo en paralelo</span>
-                        </button>
+                    <!-- Tarjeta 2: Termux CLI -->
+                    <div class="glass-card tool-card">
+                        <div class="tool-icon-wrapper cli"><i class="fa-solid fa-terminal"></i></div>
+                        <h4 class="tool-card-title">OpenFind Termux CLI</h4>
+                        <p class="tool-card-desc" data-i18n="tools.cli_desc">Utilería de terminal ultra-rápida escrita en Python nativo puro. Optimizado para Termux con consumo nulo de datos extra e importación de archivos locales.</p>
+                        <a href="#cli" class="tool-learn-more"><span data-i18n="tools.learn_more">Explorar detalles</span> <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
 
-                    <!-- Progreso -->
-                    <div id="bulk-progress-panel" class="progress-panel">
-                        <div class="progress-info">
-                            <span id="progress-text" data-i18n="fast.progress_idle">Preparado para escanear...</span>
-                            <span id="progress-percentage">0%</span>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div id="progress-bar-fill" class="progress-bar-fill"></div>
-                        </div>
-                        <div class="progress-stats">
-                            <span class="stat-badge stat-available" id="stat-avail-badge"><i class="fa-solid fa-circle-check"></i> <span data-i18n="fast.stat_avail">DNS Disponible</span>: <strong id="stat-avail-count">0</strong></span>
-                            <span class="stat-badge stat-taken" id="stat-taken-badge"><i class="fa-solid fa-circle-xmark"></i> <span data-i18n="fast.stat_taken">DNS Ocupado</span>: <strong id="stat-taken-count">0</strong></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resultados del escaneo masivo -->
-                <div class="bulk-results-section">
-                    <div class="results-header">
-                        <h3 data-i18n="fast.results_title"><i class="fa-solid fa-list-check"></i> Resultados en tiempo real:</h3>
-                        <div class="action-buttons-group">
-                            <button id="download-results-btn" class="download-btn disabled" disabled>
-                                <i class="fa-solid fa-file-lines"></i> <span data-i18n="fast.download_txt">Reporte TXT</span>
-                            </button>
-                            <button id="download-pdf-btn" class="download-btn pdf-btn disabled" disabled>
-                                <i class="fa-solid fa-file-pdf"></i> <span data-i18n="fast.download_pdf">Reporte PDF</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="bulk-results-grid" class="results-grid">
-                        <div class="empty-state">
-                            <i class="fa-solid fa-server"></i>
-                            <p data-i18n="fast.empty_text">Ingresa tu lista arriba y ejecuta el escaneo para ver los resultados.</p>
-                        </div>
+                    <!-- Tarjeta 3: Telegram Bot -->
+                    <div class="glass-card tool-card">
+                        <div class="tool-icon-wrapper bot"><i class="fa-solid fa-robot"></i></div>
+                        <h4 class="tool-card-title">Telegram Bot</h4>
+                        <p class="tool-card-desc" data-i18n="tools.bot_desc">Agente conversacional autónomo para comprobar la disponibilidad y estado técnico de cualquier dominio en milisegundos directamente en Telegram.</p>
+                        <a href="#bot" class="tool-learn-more"><span data-i18n="tools.learn_more">Explorar detalles</span> <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 </div>
             </section>
 
-
-            <!-- PESTAÑA 3: DETALLES DE LA APP ANDROID NATIVA -->
-            <section id="tab-androidapp" class="tab-panel">
-                <div class="hero-section">
-                    <h2 class="hero-title" data-i18n="app.title">OpenFind App - Versión Android Nativa</h2>
-                    <p class="hero-subtitle" data-i18n="app.subtitle">Lleva todo el poder de los agentes autónomos de dominios directamente en tu teléfono inteligente.</p>
-                </div>
-
-                <div class="app-showcase-grid">
-                    <!-- Preview visual simulando la app -->
-                    <div class="glass-card phone-mockup">
-                        <div class="phone-header">
-                            <div class="phone-camera"></div>
-                            <div class="phone-dynamic-island">
-                                <span class="island-text"><i class="fa-solid fa-robot"></i> OpenFind AI</span>
-                            </div>
-                        </div>
-                        
-                        <div class="phone-screen">
-                            <div class="screen-header">
-                                <img src="logo.webp" class="screen-logo" alt="Logo">
-                                <div class="screen-brand">
-                                    <h3>OpenFind AI</h3>
-                                    <span>hola@neopunto.com</span>
-                                </div>
-                                <div class="screen-lang-flag">
-                                    <div class="flag-container-square">
-                                        <i class="fa-solid fa-globe"></i>
-                                    </div>
+            <!-- SECCIÓN 3: DETALLE - APLICACIÓN ANDROID NATIVA -->
+            <section id="android" class="detail-section">
+                <div class="detail-layout">
+                    <!-- Vista previa en Mockup -->
+                    <div class="mockup-side">
+                        <div class="glass-card phone-mockup">
+                            <div class="phone-header">
+                                <div class="phone-camera"></div>
+                                <div class="phone-dynamic-island">
+                                    <span class="island-text"><i class="fa-solid fa-robot"></i> OpenFind AI</span>
                                 </div>
                             </div>
-
-                            <div class="screen-body">
-                                <div class="mock-agent-card">
-                                    <div class="agent-avatar"><i class="fa-solid fa-robot"></i></div>
-                                    <div class="agent-info">
-                                        <h4>Agente Evaluador IA</h4>
-                                        <p>Calificación del dominio en base a pronunciación, memorabilidad y viabilidad comercial.</p>
+                            
+                            <div class="phone-screen">
+                                <div class="screen-header">
+                                    <img src="logo.webp" class="screen-logo" alt="Logo">
+                                    <div class="screen-brand">
+                                        <h3>OpenFind AI</h3>
+                                        <span>hola@neopunto.com</span>
+                                    </div>
+                                    <div class="screen-lang-flag">
+                                        <div class="flag-container-square">
+                                            <i class="fa-solid fa-globe"></i>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="mock-domain-card">
-                                    <div class="mock-domain-top">
-                                        <strong>neoopenfind.ai</strong>
-                                        <span class="mock-badge-avail">Disponible</span>
+                                <div class="screen-body">
+                                    <div class="mock-agent-card">
+                                        <div class="agent-avatar"><i class="fa-solid fa-robot"></i></div>
+                                        <div class="agent-info">
+                                            <h4>Agente Evaluador IA</h4>
+                                            <p>Puntuación por ritmo silábico, pronunciabilidad y patrones guardados en tu dispositivo.</p>
+                                        </div>
                                     </div>
-                                    <div class="mock-domain-agent-rec">
-                                        <i class="fa-solid fa-shield-halved"></i> 🤖 Yo te recomiendo esta (Score: 9.3/10)
-                                    </div>
-                                </div>
 
-                                <div class="mock-storage-bar">
-                                    <div class="storage-text">
-                                        <span>Biblioteca de Favoritos</span>
-                                        <strong>10 / 10 elementos</strong>
+                                    <div class="mock-domain-card">
+                                        <div class="mock-domain-top">
+                                            <strong>neoopenfind.ai</strong>
+                                            <span class="mock-badge-avail">Disponible</span>
+                                        </div>
+                                        <div class="mock-domain-agent-rec">
+                                            <i class="fa-solid fa-shield-halved"></i> 🤖 Yo te recomiendo esta (Score: 9.3/10)
+                                        </div>
                                     </div>
-                                    <div class="storage-progress"><div class="fill" style="width: 100%"></div></div>
-                                </div>
 
-                                <div class="mock-bottom-nav">
-                                    <div class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Buscar</span></div>
-                                    <div class="nav-item"><i class="fa-solid fa-history"></i><span>Guardados</span></div>
-                                    <div class="nav-item"><i class="fa-solid fa-info-circle"></i><span>Acerca de</span></div>
+                                    <div class="mock-storage-bar">
+                                        <div class="storage-text">
+                                            <span>Biblioteca de Favoritos</span>
+                                            <strong>10 / 10 elementos</strong>
+                                        </div>
+                                        <div class="storage-progress"><div class="fill" style="width: 100%"></div></div>
+                                    </div>
+
+                                    <div class="mock-bottom-nav">
+                                        <div class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Buscar</span></div>
+                                        <div class="nav-item"><i class="fa-solid fa-history"></i><span>Guardados</span></div>
+                                        <div class="nav-item"><i class="fa-solid fa-info-circle"></i><span>Acerca de</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Características de la App -->
-                    <div class="app-details-info">
-                        <div class="glass-card feature-detail-card">
-                            <h3 data-i18n="app.tech_title"><i class="fa-solid fa-code"></i> Arquitectura Android 16 Premium</h3>
-                            <p data-i18n="app.tech_desc">Desarrollada utilizando Kotlin Moderno en su totalidad, estructurada bajo un namespace limpio en solo dos niveles de carpetas (<code>openfind.ai</code>). Libre de código Java obsoleto.</p>
+                    <!-- Detalles Técnicos -->
+                    <div class="info-side">
+                        <div class="details-header-box">
+                            <span class="detail-label" data-i18n="app.tech_label">Arquitectura Móvil Novedosa</span>
+                            <h3 class="detail-main-title" data-i18n="app.title">OpenFind App - Cliente Android Premium</h3>
                         </div>
 
-                        <div class="glass-card feature-detail-card">
-                            <h3 data-i18n="app.icons_title"><i class="fa-solid fa-icons"></i> Sistema de Iconos Vectoriales Puros</h3>
-                            <p data-i18n="app.icons_desc">Cumpliendo estrictamente las directrices estéticas de las tiendas modernas, se reemplazan todos los emojis vulgares en la interfaz por iconos vectoriales XML estilizados (Outlines y Filled) para lograr una estética profesional.</p>
+                        <div class="details-features-list">
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-code"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="app.feat1_title">Código Kotlin Puro (openfind.ai)</h5>
+                                    <p data-i18n="app.feat1_desc">Compilado bajo Android 16 (SDK 36) con soporte retrospectivo estable hasta SDK 26. Código 100% Kotlin limpio organizado en dos niveles de paquetes, libre de archivos Java.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-brain"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="app.feat2_title">Agente IA de Marca Lingüístico</h5>
+                                    <p data-i18n="app.feat2_desc">Evalúa dominios localmente según fluidez silábica, memorabilidad, idoneidad del TLD, y se personaliza aprendiendo de los intereses almacenados en la base de datos.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-database"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="app.feat3_title">Gestión de Almacenamiento Inteligente (Límite: 10)</h5>
+                                    <p data-i18n="app.feat3_desc">Evita bases de datos infinitas o lentitud limitando el almacenamiento a 10 elementos. Avisa al usuario con un elegante diálogo para realizar limpiezas periódicas (Opción A / Opción B / Cancelar).</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-icons"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="app.feat4_title">Sistema de Iconos XML Sin Emojis</h5>
+                                    <p data-i18n="app.feat4_desc">Cumple con las normas visuales de las tiendas de apps modernas, utilizando exclusivamente drawables vectoriales XML nítidos para todas las acciones de la interfaz.</p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="glass-card feature-detail-card">
-                            <h3 data-i18n="app.limit_title"><i class="fa-solid fa-database"></i> Gestión de Almacenamiento Inteligente</h3>
-                            <p data-i18n="app.limit_desc">Para mantener la base de datos local ligera y libre de registros eternos o basura, el sistema limita el historial y los favoritos a un máximo de 10 elementos. Al llegar al límite, un diálogo proactivo solicita decidir entre el vaciado manual de la memoria o la autolimpieza inteligente periódica.</p>
-                        </div>
-
-                        <div class="action-box">
+                        <div class="detail-actions-box">
                             <a href="https://github.com/NeoTurcios/openfind/releases/latest" target="_blank" class="glow-button purple big-btn">
                                 <i class="fa-solid fa-circle-down"></i> <span data-i18n="app.download_btn">Descargar APK Compilada</span>
                             </a>
@@ -302,73 +220,188 @@
                 </div>
             </section>
 
-
-            <!-- PESTAÑA 4: GUÍA CLI / TERMUX -->
-            <section id="tab-termuxcli" class="tab-panel">
-                <div class="hero-section">
-                    <h2 class="hero-title" data-i18n="cli.title">OpenFind en tu terminal con Termux</h2>
-                    <p class="hero-subtitle" data-i18n="cli.subtitle">Cómo instalar y ejecutar la versión CLI rápida optimizada para celulares y servidores Linux.</p>
-                </div>
-
-                <div class="cli-guide-grid">
-                    <!-- Tarjeta 1: Comando de Instalación -->
-                    <div class="glass-card cli-step-card">
-                        <div class="card-header">
-                            <span class="step-num">1</span>
-                            <h3 data-i18n="cli.step1_title">Instalación en un solo comando</h3>
-                        </div>
-                        <p data-i18n="cli.step1_desc">Abre Termux en tu Android, copia la línea de abajo y pégala para clonar, configurar e instalar el binario automáticamente:</p>
-                        <div class="code-box">
-                            <code id="code-install">pkg install git python -y && git clone https://github.com/NeoTurcios/openfind.git && cd openfind && chmod +x install.sh && ./install.sh</code>
-                            <button class="copy-code-btn" data-target="code-install">
-                                <i class="fa-solid fa-copy"></i>
-                            </button>
+            <!-- SECCIÓN 4: DETALLE - TERMUX CLI -->
+            <section id="cli" class="detail-section alt-bg">
+                <div class="detail-layout reverse">
+                    <!-- Vista previa de Consola -->
+                    <div class="mockup-side">
+                        <div class="glass-card terminal-mockup">
+                            <div class="terminal-header">
+                                <div class="term-dots">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <span class="term-title">Termux - openfind</span>
+                            </div>
+                            <div class="terminal-body">
+                                <p class="term-line output"><span class="t-green">~ $</span> openfind</p>
+                                <p class="term-line ascii-art">
+  ___                     _____ _           _  _   ___ 
+ / _ \ _ __   ___ _ __   |  ___(_)_ __   __| |/ | |_  )
+| | | | '_ \ / _ \ '_ \  | |_  | | '_ \ / _` || |  / / 
+| |_| | |_) |  __/ | | | |  _| | | | | | (_| || | / /_ 
+ \___/| .__/ \___|_| |_| |_|   |_|_| |_|\__,_||_|/____|
+      |_|                                              
+                                </p>
+                                <p class="term-line output">🔎 El motor híbrido inteligente de dominios</p>
+                                <p class="term-line output">--------------------------------------------------</p>
+                                <p class="term-line output">[+] Modo: Sockets TCP directos (Puerto 43) y DNS Rápido</p>
+                                <p class="term-line output">[+] Analizando: <span class="t-cyan">neoopenfind.ai</span></p>
+                                <p class="term-line success">✔ ¡DISPONIBLE! (Confirmado recursivamente por WHOIS)</p>
+                                <p class="term-line output">🤖 Agente IA: Score 9.3/10 - Altamente recomendado</p>
+                                <p class="term-line output"><span class="t-green">~ $</span> <span class="cursor">_</span></p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Tarjeta 2: Lanzamiento -->
-                    <div class="glass-card cli-step-card">
-                        <div class="card-header">
-                            <span class="step-num">2</span>
-                            <h3 data-i18n="cli.step2_title">Cómo ejecutar la aplicación CLI</h3>
+                    <!-- Detalles Técnicos -->
+                    <div class="info-side">
+                        <div class="details-header-box">
+                            <span class="detail-label" data-i18n="cli.tech_label">Consola y Red a bajo nivel</span>
+                            <h3 class="detail-main-title" data-i18n="cli.title">OpenFind Termux - La versión CLI definitiva</h3>
                         </div>
-                        <p data-i18n="cli.step2_desc">Una vez completado el instalador, puedes arrancar la herramienta en cualquier momento desde cualquier carpeta escribiendo:</p>
-                        <div class="code-box">
-                            <code id="code-run">openfind</code>
-                            <button class="copy-code-btn" data-target="code-run">
-                                <i class="fa-solid fa-copy"></i>
-                            </button>
-                        </div>
-                        <p class="helper-text" data-i18n="cli.step2_helper"><i class="fa-solid fa-circle-info"></i> Se creará un alias directo en los binarios de tu terminal.</p>
-                    </div>
 
-                    <!-- Tarjeta 3: Características de la consola -->
-                    <div class="glass-card cli-step-card span-two-cols">
-                        <h3 data-i18n="cli.step3_title"><i class="fa-solid fa-bolt"></i> Beneficios de usar la versión de Consola</h3>
-                        <ul class="features-list-web">
-                            <li data-i18n="cli.step3_item1"><i class="fa-solid fa-bolt"></i> **Rendimiento instantáneo:** Consultas a nivel de red directa a través de sockets TCP recursivos.</li>
-                            <li data-i18n="cli.step3_item2"><i class="fa-solid fa-file-import"></i> **Importación local:** Carga y analiza archivos físicos `.txt` en bloque desde tu almacenamiento interno.</li>
-                            <li data-i18n="cli.step3_item3"><i class="fa-solid fa-shield-halved"></i> **Cero telemetría:** Todo opera en tu dispositivo local, sin llamadas de red a terceros ni cuotas de APIs de pago.</li>
-                        </ul>
+                        <p class="cli-description-p" data-i18n="cli.desc_p">Especialmente diseñado para ejecutarse en terminales de celulares Android (a través de la app Termux) y servidores Linux. Escrito en Python nativo puro, sin dependencias pesadas ni necesidad de compiladores.</p>
+
+                        <div class="cli-command-install-box">
+                            <h5 data-i18n="cli.step1_title"><i class="fa-solid fa-terminal"></i> Instalación en un solo comando:</h5>
+                            <div class="code-box">
+                                <code id="code-install">pkg install git python -y && git clone https://github.com/NeoTurcios/openfind.git && cd openfind && chmod +x install.sh && ./install.sh</code>
+                                <button class="copy-code-btn" data-target="code-install">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cli-command-install-box">
+                            <h5 data-i18n="cli.step2_title"><i class="fa-solid fa-terminal"></i> Ejecución rápida (Alias directo):</h5>
+                            <div class="code-box">
+                                <code id="code-run">openfind</code>
+                                <button class="copy-code-btn" data-target="code-run">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="helper-text" data-i18n="cli.step2_helper"><i class="fa-solid fa-circle-info"></i> El instalador crea de forma segura un alias de sistema en tu terminal.</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- SECCIÓN 5: DETALLE - TELEGRAM BOT -->
+            <section id="bot" class="detail-section">
+                <div class="detail-layout">
+                    <!-- Vista previa de Conversación -->
+                    <div class="mockup-side">
+                        <div class="glass-card telegram-mockup">
+                            <div class="tg-header">
+                                <div class="tg-back"><i class="fa-solid fa-arrow-left"></i></div>
+                                <div class="tg-avatar"><i class="fa-solid fa-robot"></i></div>
+                                <div class="tg-user-info">
+                                    <h4>OpenFind AI Bot</h4>
+                                    <span>bot</span>
+                                </div>
+                            </div>
+                            <div class="tg-body">
+                                <div class="tg-message user">
+                                    <span class="text">check openfind.ai</span>
+                                    <span class="time">17:15</span>
+                                </div>
+                                <div class="tg-message bot">
+                                    <span class="text">
+                                        <b>Dominio:</b> openfind.ai<br>
+                                        <b>Estado:</b> 🔴 Ocupado (DNS)<br>
+                                        <b>IP:</b> 185.199.108.153<br>
+                                        <b>Método:</b> Resolución DNS Rápida<br><br>
+                                        <i>Verified with OpenFind AI | GitHub</i>
+                                    </span>
+                                    <span class="time">17:15</span>
+                                </div>
+                                <div class="tg-message user">
+                                    <span class="text">check neopunto.com</span>
+                                    <span class="time">17:16</span>
+                                </div>
+                                <div class="tg-message bot">
+                                    <span class="text">
+                                        <b>Dominio:</b> neopunto.com<br>
+                                        <b>Estado:</b> 🔴 Ocupado (WHOIS)<br>
+                                        <b>Registrador:</b> NameSilo, LLC<br>
+                                        <b>Creación:</b> 2020-03-01<br><br>
+                                        <i>Verified with OpenFind AI | GitHub</i>
+                                    </span>
+                                    <span class="time">17:16</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- PESTAÑA 5: ACERCA DE Y PROYECTOS -->
-            <section id="tab-about" class="tab-panel">
-                <div class="hero-section">
-                    <h2 class="hero-title" data-i18n="about.title">Detalles del Proyecto y Nosotros</h2>
-                    <p class="hero-subtitle" data-i18n="about.subtitle">Conoce los principios, políticas y enlaces clave que rigen a OpenFind AI.</p>
+                    <!-- Detalles del Bot -->
+                    <div class="info-side">
+                        <div class="details-header-box">
+                            <span class="detail-label" data-i18n="bot.tech_label">Agente de Red Conversacional</span>
+                            <h3 class="detail-main-title" data-i18n="bot.title">Telegram Bot Autónomo</h3>
+                        </div>
+
+                        <p class="cli-description-p" data-i18n="bot.desc_p">Integra un script de bot en Python que opera de manera asíncrona sobre los servidores de Telegram. Te permite interactuar y auditar dominios enviando mensajes de chat simples desde cualquier lugar.</p>
+
+                        <div class="details-features-list">
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-bolt"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="bot.feat1_title">Respuestas en Milisegundos</h5>
+                                    <p data-i18n="bot.feat1_desc">Combina los mismos motores de sockets TCP para procesar de forma inmediata la disponibilidad de dominios y devolver tarjetas con formato HTML.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-item-row">
+                                <div class="feat-icon"><i class="fa-solid fa-server"></i></div>
+                                <div class="feat-content">
+                                    <h5 data-i18n="bot.feat2_title">Configuración en Consola Segura</h5>
+                                    <p data-i18n="bot.feat2_desc">Al ejecutar <code>python telegram_bot.py</code> por primera vez, el CLI te pedirá de forma segura tu token de BotFather y creará un archivo de configuración local cifrado.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </section>
 
+            <!-- SECCIÓN 6: CÓMO FUNCIONA BAJO EL CAPÓ -->
+            <section id="architecture" class="architecture-section">
+                <h3 class="section-main-title" data-i18n="arch.title"><i class="fa-solid fa-gears"></i> ¿Cómo funciona bajo el capó?</h3>
+                <p class="section-subtitle" data-i18n="arch.subtitle">El motor de OpenFind no depende de intermediarios costosos. Funciona directamente en las capas de red de internet.</p>
+                
+                <div class="architecture-flow-grid">
+                    <div class="flow-card glass-card">
+                        <div class="flow-num">1</div>
+                        <h4 data-i18n="arch.step1_title">Paso 1: Resolución DNS</h4>
+                        <p data-i18n="arch.step1_desc">Realiza una consulta ultra-veloz a los servidores DNS. Si el dominio responde con una dirección IP activa, se marca como Ocupado inmediatamente sin consumir recursos adicionales.</p>
+                    </div>
+
+                    <div class="flow-card glass-card">
+                        <div class="flow-num">2</div>
+                        <h4 data-i18n="arch.step2_title">Paso 2: Consulta Socket WHOIS</h4>
+                        <p data-i18n="arch.step2_desc">Si no hay registros DNS, abre un socket TCP directo en el puerto 43 hacia el servidor de IANA y redirige recursivamente la consulta al servidor TLD oficial para confirmar si está libre.</p>
+                    </div>
+
+                    <div class="flow-card glass-card">
+                        <div class="flow-num">3</div>
+                        <h4 data-i18n="arch.step3_title">Paso 3: Evaluación de Marca</h4>
+                        <p data-i18n="arch.step3_desc">El agente de inteligencia local del dispositivo procesa el nombre y genera calificaciones dinámicas de memorabilidad y fluidez del nombre de marca.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 7: NOSOTROS Y LICENCIAS (ABOUT SECTION) -->
+            <section id="about" class="about-section-landing">
                 <div class="about-container">
+                    <h3 class="section-main-title" data-i18n="about.title"><i class="fa-solid fa-user-shield"></i> Nosotros y Licencia del Proyecto</h3>
+                    
                     <div class="about-grid">
                         
                         <!-- Tarjeta de Contacto / Creador -->
                         <div class="glass-card credentials-card">
                             <div class="creator-avatar"><i class="fa-solid fa-address-card"></i></div>
-                            <h3 data-i18n="about.creator_title">Desarrollador Principal</h3>
+                            <h3 class="credentials-card-title" data-i18n="about.creator_title">Desarrollador Principal</h3>
                             <p class="creator-name">NeoTurcios</p>
                             
                             <div class="creator-details">
@@ -439,50 +472,7 @@
 
     </div>
 
-    <!-- DIÁLOGO EMULADO DE LÍMITE DE ALMACENAMIENTO (Option A / Option B / Cancel) -->
-    <div id="storage-modal-overlay" class="modal-overlay">
-        <div class="glass-card storage-modal-card">
-            <div class="modal-glow-bg"></div>
-            
-            <div class="modal-header-area">
-                <div class="modal-icon-container"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <h3 id="modal-title" data-i18n="modal.title">Límite de memoria alcanzado</h3>
-            </div>
-            
-            <div class="modal-body-area">
-                <p id="modal-description" data-i18n="modal.desc">Veo que la lista de favoritos y guardados está llena (Límite: 10 elementos). ¿Qué deseas hacer para continuar?</p>
-                
-                <div class="modal-options-list">
-                    <!-- Opción A -->
-                    <div class="modal-option-row" id="modal-option-a">
-                        <div class="option-radio">A</div>
-                        <div class="option-info">
-                            <h4 data-i18n="modal.opt_a_title">Opción A: Vaciar toda la lista</h4>
-                            <p data-i18n="modal.opt_a_desc">Borra por completo todos los elementos guardados para empezar de cero con la memoria limpia.</p>
-                        </div>
-                    </div>
-
-                    <!-- Opción B -->
-                    <div class="modal-option-row" id="modal-option-b">
-                        <div class="option-radio">B</div>
-                        <div class="option-info">
-                            <h4 data-i18n="modal.opt_b_title">Opción B: Autolimpieza Automática</h4>
-                            <p data-i18n="modal.opt_b_desc">Elimina automáticamente las recomendaciones más antiguas al agregar nuevas para mantener el límite en 10.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="modal-footer-area">
-                <button id="modal-btn-confirm" class="glow-button purple disabled" disabled data-i18n="modal.confirm_btn">Confirmar Acción</button>
-                <button id="modal-btn-cancel" class="outline-btn" data-i18n="modal.cancel_btn">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts JavaScript -->
-    <!-- jsPDF para los reportes masivos client-side -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
