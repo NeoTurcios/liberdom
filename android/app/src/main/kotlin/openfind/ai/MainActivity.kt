@@ -1238,30 +1238,287 @@ class MainActivity : AppCompatActivity() {
     // AUTONOMOUS AGENT LIMIT DIALOG (A / B / CANCEL)
     // ==========================================
     private fun showStorageFullDialog(storeName: String, onSelection: (String) -> Unit) {
-        val title = if (currentLang == "es") "🤖 Alerta del Agente Autónomo" else "🤖 Autonomous Agent Warning"
-        val message = if (currentLang == "es") {
-            "Veo que la lista de guardados y recomendados está llena (10 elementos).\n\n" +
-            "¿Qué acción deseas que realice por ti?\n\n" +
-            "Selecciona A: Limpiar toda la biblioteca manualmente ahora.\n" +
-            "Selecciona B: Mantener la limpieza automática (borrar más antiguo)."
-        } else {
-            "I noticed that the saved and recommended list is full (10 items).\n\n" +
-            "What action would you like me to execute?\n\n" +
-            "Select A: Clear the entire library manually now.\n" +
-            "Select B: Keep auto-cleaning active (discard oldest)."
+        val dialog = android.app.Dialog(this)
+        dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE)
+        
+        // Root container with dark background and rounded borders
+        val rootLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            setPadding(50, 50, 50, 50)
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#0F172A")) // Modern deep slate
+                cornerRadius = 40f
+                setStroke(3, Color.parseColor("#334155")) // Border outline
+            })
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
         }
 
-        AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert)
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(if (currentLang == "es") "Seleccionar A: Limpiar Todo" else "Select A: Clear All") { _, _ ->
-                onSelection("A")
+        // Header warning icon
+        val iconView = TextView(this).apply {
+            text = "⚠️"
+            textSize = 28f
+            gravity = android.view.Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 16) }
+        }
+        rootLayout.addView(iconView)
+
+        // Title
+        val titleView = TextView(this).apply {
+            text = if (currentLang == "es") "Límite de memoria alcanzado" else "Memory limit reached"
+            setTextColor(Color.WHITE)
+            textSize = 18f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            gravity = android.view.Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 12) }
+        }
+        rootLayout.addView(titleView)
+
+        // Description
+        val descView = TextView(this).apply {
+            text = if (currentLang == "es") {
+                "Veo que la lista de favoritos y guardados está llena (Límite: 10 elementos). ¿Qué deseas hacer para continuar?"
+            } else {
+                "I noticed that the saved favorites list is full (Limit: 10 items). What would you like to do to continue?"
             }
-            .setNeutralButton(if (currentLang == "es") "Seleccionar B: Auto-limpieza" else "Select B: Auto-clean") { _, _ ->
-                onSelection("B")
+            setTextColor(Color.parseColor("#94A3B8")) // Muted gray
+            textSize = 13f
+            gravity = android.view.Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 24) }
+        }
+        rootLayout.addView(descView)
+
+        // Option selection tracking
+        var selectedOption = ""
+
+        // Option A Card
+        val cardA = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            setPadding(24, 20, 24, 20)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 16) }
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E293B")) // Option background
+                cornerRadius = 20f
+                setStroke(2, Color.parseColor("#334155"))
+            })
+        }
+
+        // Badge A
+        val badgeA = TextView(this).apply {
+            text = "A"
+            setTextColor(Color.WHITE)
+            textSize = 12f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            gravity = android.view.Gravity.CENTER
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#475569"))
+                cornerRadius = 99f
+            })
+            layoutParams = LinearLayout.LayoutParams(50, 50).apply { setMargins(0, 0, 16, 0) }
+        }
+        cardA.addView(badgeA)
+
+        // Info A
+        val infoA = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)
+        }
+        val labelA = TextView(this).apply {
+            text = if (currentLang == "es") "Opción A: Vaciar toda la lista" else "Option A: Empty the entire list"
+            setTextColor(Color.WHITE)
+            textSize = 13f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+        val subA = TextView(this).apply {
+            text = if (currentLang == "es") "Borra por completo todos los elementos guardados para empezar de cero con la memoria limpia." else "Wipe out all saved domains to start fresh with fully clean storage."
+            setTextColor(Color.parseColor("#94A3B8"))
+            textSize = 10.5f
+        }
+        infoA.addView(labelA)
+        infoA.addView(subA)
+        cardA.addView(infoA)
+        rootLayout.addView(cardA)
+
+        // Option B Card
+        val cardB = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            setPadding(24, 20, 24, 20)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 24) }
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E293B"))
+                cornerRadius = 20f
+                setStroke(2, Color.parseColor("#334155"))
+            })
+        }
+
+        // Badge B
+        val badgeB = TextView(this).apply {
+            text = "B"
+            setTextColor(Color.WHITE)
+            textSize = 12f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            gravity = android.view.Gravity.CENTER
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#475569"))
+                cornerRadius = 99f
+            })
+            layoutParams = LinearLayout.LayoutParams(50, 50).apply { setMargins(0, 0, 16, 0) }
+        }
+        cardB.addView(badgeB)
+
+        // Info B
+        val infoB = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)
+        }
+        val labelB = TextView(this).apply {
+            text = if (currentLang == "es") "Opción B: Autolimpieza Automática" else "Option B: Dynamic Auto-Cleanup"
+            setTextColor(Color.WHITE)
+            textSize = 13f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+        val subB = TextView(this).apply {
+            text = if (currentLang == "es") "Elimina automáticamente las recomendaciones más antiguas al guardar nuevas para mantener el límite." else "Automatically delete the oldest saved recommendations when new ones are added."
+            setTextColor(Color.parseColor("#94A3B8"))
+            textSize = 10.5f
+        }
+        infoB.addView(labelB)
+        infoB.addView(subB)
+        cardB.addView(infoB)
+        rootLayout.addView(cardB)
+
+        // Buttons Layout
+        val buttonsLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        // Cancel Button
+        val btnCancel = Button(this).apply {
+            text = if (currentLang == "es") "Cancelar" else "Cancel"
+            setTextColor(Color.WHITE)
+            textSize = 13f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.TRANSPARENT)
+                cornerRadius = 16f
+                setStroke(2, Color.parseColor("#475569"))
+            })
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f).apply { setMargins(0, 0, 12, 0) }
+            setOnClickListener { dialog.dismiss() }
+        }
+        buttonsLayout.addView(btnCancel)
+
+        // Confirm Button
+        val btnConfirm = Button(this).apply {
+            text = if (currentLang == "es") "Confirmar" else "Confirm"
+            setTextColor(Color.WHITE)
+            textSize = 13f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#475569")) // Disabled color
+                cornerRadius = 16f
+            })
+            isEnabled = false
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)
+        }
+        buttonsLayout.addView(btnConfirm)
+        rootLayout.addView(buttonsLayout)
+
+        // Set selections logic
+        fun updateConfirmState() {
+            if (selectedOption.isNotEmpty()) {
+                btnConfirm.isEnabled = true
+                btnConfirm.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                    setColor(Color.parseColor("#8B5CF6")) // Neon Purple active
+                    cornerRadius = 16f
+                })
             }
-            .setNegativeButton(if (currentLang == "es") "Cancelar" else "Cancel", null)
-            .show()
+        }
+
+        cardA.setOnClickListener {
+            selectedOption = "A"
+            cardA.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E1B4B")) // Dark violet selection
+                cornerRadius = 20f
+                setStroke(3, Color.parseColor("#8B5CF6")) // Glowing border
+            })
+            badgeA.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#8B5CF6"))
+                cornerRadius = 99f
+            })
+            cardB.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E293B"))
+                cornerRadius = 20f
+                setStroke(2, Color.parseColor("#334155"))
+            })
+            badgeB.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#475569"))
+                cornerRadius = 99f
+            })
+            updateConfirmState()
+        }
+
+        cardB.setOnClickListener {
+            selectedOption = "B"
+            cardB.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E1B4B"))
+                cornerRadius = 20f
+                setStroke(3, Color.parseColor("#8B5CF6"))
+            })
+            badgeB.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#8B5CF6"))
+                cornerRadius = 99f
+            })
+            cardA.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#1E293B"))
+                cornerRadius = 20f
+                setStroke(2, Color.parseColor("#334155"))
+            })
+            badgeA.setBackground(android.graphics.drawable.GradientDrawable().apply {
+                setColor(Color.parseColor("#475569"))
+                cornerRadius = 99f
+            })
+            updateConfirmState()
+        }
+
+        btnConfirm.setOnClickListener {
+            if (selectedOption.isNotEmpty()) {
+                onSelection(selectedOption)
+                dialog.dismiss()
+            }
+        }
+
+        dialog.setContentView(rootLayout)
+        dialog.window?.apply {
+            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+        dialog.show()
     }
 
     // ==========================================
