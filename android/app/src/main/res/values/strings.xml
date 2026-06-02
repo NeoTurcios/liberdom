@@ -1,3 +1,151 @@
 <resources>
     <string name="app_name">OpenFind AI</string>
+    <string name="app_subtitle">Domain Intelligence Suite</string>
+
+    <!-- Navigation -->
+    <string name="nav_search">Search</string>
+    <string name="nav_bulk">Bulk Scan</string>
+    <string name="nav_generator">Generator</string>
+    <string name="nav_library">Library</string>
+    <string name="nav_watchlist">Watchlist</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Search -->
+    <string name="search_title">Domain Search</string>
+    <string name="search_subtitle">Check domain availability in real time</string>
+    <string name="search_placeholder">Enter domain name…</string>
+    <string name="search_button">Check Domain</string>
+    <string name="search_loading">Checking availability…</string>
+    <string name="search_advanced_audit">Advanced Audit</string>
+    <string name="search_advanced_audit_desc">SSL &amp; Cloudflare detection</string>
+
+    <!-- Result -->
+    <string name="result_status_available">Available!</string>
+    <string name="result_status_taken">Taken</string>
+    <string name="result_status_unknown">Unknown</string>
+    <string name="result_ip">Server IP</string>
+    <string name="result_registrar">Registrar</string>
+    <string name="result_creation_date">Creation Date</string>
+    <string name="result_method">Method</string>
+    <string name="result_ssl">SSL</string>
+    <string name="result_ssl_issuer">SSL Issuer</string>
+    <string name="result_cloudflare">Cloudflare</string>
+    <string name="result_nameservers">Name Servers</string>
+    <string name="result_cloudflare_orange">Active (Proxied)</string>
+    <string name="result_cloudflare_gray">Active (DNS Only)</string>
+    <string name="result_cloudflare_none">Not detected</string>
+    <string name="result_not_available">Not Available</string>
+    <string name="result_technical_details">Technical Details</string>
+
+    <!-- Actions -->
+    <string name="action_save">Save</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_unsave">Unsave</string>
+    <string name="action_export_pdf">Export PDF</string>
+    <string name="action_share">Share</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_clear_all">Clear All</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_check">Check</string>
+    <string name="action_recheck">Re-check</string>
+
+    <!-- Bulk -->
+    <string name="bulk_title">Bulk Domain Check</string>
+    <string name="bulk_subtitle">Check multiple domains at once. Use 300ms delay between checks.</string>
+    <string name="bulk_placeholder">Paste domains (one per line):\n• domain.com\n• example.org\n• mysite.io</string>
+    <string name="bulk_button">Bulk Check</string>
+    <string name="bulk_stats_format">Checked: %1$d | Free: %2$d | Taken: %3$d</string>
+
+    <!-- Generator -->
+    <string name="generator_title">Name Generator</string>
+    <string name="generator_subtitle">Generate domain ideas from a keyword</string>
+    <string name="generator_keyword_hint">Enter keyword (e.g., tech, medi, flow)</string>
+    <string name="generator_select_tlds">Select extensions:</string>
+    <string name="generator_button">Generate Names</string>
+    <string name="generator_empty">No names generated yet. Enter a keyword and try.</string>
+
+    <!-- Library -->
+    <string name="library_title">My Library</string>
+    <string name="library_tab_saved">Saved</string>
+    <string name="library_tab_history">History</string>
+    <string name="library_empty_saved">No saved domains yet.</string>
+    <string name="library_empty_history">No search history yet.</string>
+    <string name="library_clear_confirm">Clear all items?</string>
+    <string name="library_clear_confirm_desc">This action cannot be undone.</string>
+
+    <!-- Watchlist -->
+    <string name="watchlist_title">Domain Watchlist</string>
+    <string name="watchlist_empty">No domains being watched.\nAdd domains to monitor and get notified when they become available.</string>
+    <string name="watchlist_add">Add Domain</string>
+    <string name="watchlist_add_domain_hint">Enter domain…</string>
+    <string name="watchlist_add_label_hint">Label (optional)</string>
+    <string name="watchlist_interval">Check interval:</string>
+    <string name="watchlist_interval_6h">Every 6 hours</string>
+    <string name="watchlist_interval_12h">Every 12 hours</string>
+    <string name="watchlist_interval_24h">Every 24 hours</string>
+    <string name="watchlist_interval_48h">Every 48 hours</string>
+    <string name="watchlist_notify">Notify when available</string>
+    <string name="watchlist_last_checked">Last checked: %1$s</string>
+    <string name="watchlist_status_available">Available!</string>
+    <string name="watchlist_status_taken">Registered</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_ai_section">AI Assistant</string>
+    <string name="settings_ai_enable">Enable AI</string>
+    <string name="settings_ai_disabled_warning">AI is disabled. Enable for smart brand evaluation and intelligent domain suggestions.</string>
+    <string name="settings_ai_enable_dialog_title">Enable AI Assistant?</string>
+    <string name="settings_ai_enable_dialog_desc">The AI model requires approximately 15 MB of storage and works best on devices with 4+ GB RAM.\n\nOn low-end devices, performance may be impacted.</string>
+    <string name="settings_ai_enable_dialog_confirm">Enable</string>
+    <string name="settings_ai_loading">Loading AI model…</string>
+    <string name="settings_ai_load_failed_title">Failed to Load AI</string>
+    <string name="settings_ai_load_failed_desc">Could not load the AI model. Your device may not meet the requirements (2.5+ GB free RAM).\n\nUsing standard evaluation instead.</string>
+    <string name="settings_ai_load_success">AI model loaded successfully!</string>
+    <string name="settings_ai_device_info">Device: %1$s · Android %2$d · %3$.1f GB RAM</string>
+    <string name="settings_ai_compatible">✓ Compatible</string>
+    <string name="settings_ai_not_compatible">✗ Insufficient RAM</string>
+    <string name="settings_ai_recommended">★ Recommended</string>
+    <string name="settings_watchlist_section">Watchlist Defaults</string>
+    <string name="settings_watchlist_interval">Default check interval</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_developer">NeoTurcios</string>
+    <string name="settings_oss_licenses">Open Source Licenses</string>
+
+    <!-- AI Score -->
+    <string name="ai_score_format">AI Score: %1$.1f/10</string>
+    <string name="ai_score_disabled">AI disabled</string>
+    <string name="ai_feedback_s">S-Tier brand. Premium, short, and highly memorable.</string>
+    <string name="ai_feedback_a">Strong brand potential. Good memorability and flow.</string>
+    <string name="ai_feedback_b">Commercially acceptable. Consider alternatives for better impact.</string>
+    <string name="ai_feedback_c">Below average. Try the name generator for better options.</string>
+    <string name="ai_feedback_d">Hard to remember. The generator can help find better names.</string>
+
+    <!-- About -->
+    <string name="about_title">About OpenFind AI</string>
+    <string name="about_desc">OpenFind AI is a 100% local domain intelligence suite. No third-party APIs, no data collection, no tracking.\n\nAll domain checks use direct DNS resolution and WHOIS queries via raw sockets. The AI evaluation runs entirely on your device.</string>
+    <string name="about_privacy">Privacy First</string>
+    <string name="about_opensource">Open Source</string>
+
+    <!-- General -->
+    <string name="label_not_available">N/A</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+    <string name="label_active">Active</string>
+    <string name="label_inactive">Inactive</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="error_network">Network error. Check your connection.</string>
+    <string name="error_invalid_domain">Invalid domain format.</string>
+    <string name="error_unexpected">An unexpected error occurred.</string>
+    <string name="storage_full_title">Storage Full</string>
+    <string name="storage_full_desc">You\'ve reached the limit of %1$d items. Choose an option:</string>
+    <string name="storage_option_clear">Clear all and save new</string>
+    <string name="storage_option_auto">Auto-cleanup (remove oldest)</string>
+    <string name="domain_cleaned">%1$d old items removed</string>
 </resources>

@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">OpenFind AI</string>
+    <string name="app_subtitle">Suite de Inteligencia de Dominios</string>
+
+    <!-- Navigation -->
+    <string name="nav_search">Buscar</string>
+    <string name="nav_bulk">Escaneo Masivo</string>
+    <string name="nav_generator">Generador</string>
+    <string name="nav_library">Biblioteca</string>
+    <string name="nav_watchlist">Seguimiento</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <!-- Search -->
+    <string name="search_title">Búsqueda de Dominios</string>
+    <string name="search_subtitle">Verifica la disponibilidad de dominios en tiempo real</string>
+    <string name="search_placeholder">Ingresa un dominio…</string>
+    <string name="search_button">Verificar Dominio</string>
+    <string name="search_loading">Verificando disponibilidad…</string>
+    <string name="search_advanced_audit">Auditoría Avanzada</string>
+    <string name="search_advanced_audit_desc">Detección SSL y Cloudflare</string>
+
+    <!-- Result -->
+    <string name="result_status_available">¡Disponible!</string>
+    <string name="result_status_taken">Ocupado</string>
+    <string name="result_status_unknown">Desconocido</string>
+    <string name="result_ip">IP del Servidor</string>
+    <string name="result_registrar">Registrador</string>
+    <string name="result_creation_date">Fecha de Creación</string>
+    <string name="result_method">Método</string>
+    <string name="result_ssl">SSL</string>
+    <string name="result_ssl_issuer">Emisor SSL</string>
+    <string name="result_cloudflare">Cloudflare</string>
+    <string name="result_nameservers">Servidores de Nombres</string>
+    <string name="result_cloudflare_orange">Activo (Proxy)</string>
+    <string name="result_cloudflare_gray">Activo (Solo DNS)</string>
+    <string name="result_cloudflare_none">No detectado</string>
+    <string name="result_not_available">No Disponible</string>
+    <string name="result_technical_details">Detalles Técnicos</string>
+
+    <!-- Actions -->
+    <string name="action_save">Guardar</string>
+    <string name="action_remove">Eliminar</string>
+    <string name="action_unsave">Quitar de Guardados</string>
+    <string name="action_export_pdf">Exportar PDF</string>
+    <string name="action_share">Compartir</string>
+    <string name="action_copy">Copiar</string>
+    <string name="action_delete">Borrar</string>
+    <string name="action_clear_all">Limpiar Todo</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_check">Verificar</string>
+    <string name="action_recheck">Re-verificar</string>
+
+    <!-- Bulk -->
+    <string name="bulk_title">Verificación Masiva de Dominios</string>
+    <string name="bulk_subtitle">Verifica múltiples dominios a la vez. Usa 300ms de retraso entre verificaciones.</string>
+    <string name="bulk_placeholder">Pega dominios (uno por línea):\n• dominio.com\n• ejemplo.org\n• mitienda.io</string>
+    <string name="bulk_button">Verificar en Lote</string>
+    <string name="bulk_stats_format">Revisados: %1$d | Libres: %2$d | Ocupados: %3$d</string>
+
+    <!-- Generator -->
+    <string name="generator_title">Generador de Nombres</string>
+    <string name="generator_subtitle">Genera ideas de dominios a partir de una palabra clave</string>
+    <string name="generator_keyword_hint">Ingresa palabra clave (ej: tech, medi, flow)</string>
+    <string name="generator_select_tlds">Seleccionar extensiones:</string>
+    <string name="generator_button">Generar Nombres</string>
+    <string name="generator_empty">Aún no se han generado nombres. Ingresa una palabra clave e inténtalo.</string>
+
+    <!-- Library -->
+    <string name="library_title">Mi Biblioteca</string>
+    <string name="library_tab_saved">Guardados</string>
+    <string name="library_tab_history">Historial</string>
+    <string name="library_empty_saved">Aún no hay dominios guardados.</string>
+    <string name="library_empty_history">Aún no hay historial de búsqueda.</string>
+    <string name="library_clear_confirm">¿Limpiar todos los elementos?</string>
+    <string name="library_clear_confirm_desc">Esta acción no se puede deshacer.</string>
+
+    <!-- Watchlist -->
+    <string name="watchlist_title">Lista de Seguimiento</string>
+    <string name="watchlist_empty">No hay dominios en seguimiento.\nAgrega dominios para monitorear y recibe notificaciones cuando estén disponibles.</string>
+    <string name="watchlist_add">Agregar Dominio</string>
+    <string name="watchlist_add_domain_hint">Ingresa dominio…</string>
+    <string name="watchlist_add_label_hint">Etiqueta (opcional)</string>
+    <string name="watchlist_interval">Intervalo de verificación:</string>
+    <string name="watchlist_interval_6h">Cada 6 horas</string>
+    <string name="watchlist_interval_12h">Cada 12 horas</string>
+    <string name="watchlist_interval_24h">Cada 24 horas</string>
+    <string name="watchlist_interval_48h">Cada 48 horas</string>
+    <string name="watchlist_notify">Notificar cuando esté disponible</string>
+    <string name="watchlist_last_checked">Última verificación: %1$s</string>
+    <string name="watchlist_status_available">¡Disponible!</string>
+    <string name="watchlist_status_taken">Registrado</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_ai_section">Asistente IA</string>
+    <string name="settings_ai_enable">Activar IA</string>
+    <string name="settings_ai_disabled_warning">La IA está desactivada. Actívala para evaluación inteligente de marcas y sugerencias de dominio.</string>
+    <string name="settings_ai_enable_dialog_title">¿Activar Asistente IA?</string>
+    <string name="settings_ai_enable_dialog_desc">El modelo de IA requiere aproximadamente 15 MB de almacenamiento y funciona mejor en dispositivos con 4+ GB de RAM.\n\nEn dispositivos de gama baja, el rendimiento puede verse afectado.</string>
+    <string name="settings_ai_enable_dialog_confirm">Activar</string>
+    <string name="settings_ai_loading">Cargando modelo de IA…</string>
+    <string name="settings_ai_load_failed_title">Error al Cargar IA</string>
+    <string name="settings_ai_load_failed_desc">No se pudo cargar el modelo de IA. Tu dispositivo podría no cumplir los requisitos (2.5+ GB de RAM libre).\n\nUsando evaluación estándar en su lugar.</string>
+    <string name="settings_ai_load_success">¡Modelo de IA cargado exitosamente!</string>
+    <string name="settings_ai_device_info">Dispositivo: %1$s · Android %2$d · %3$.1f GB RAM</string>
+    <string name="settings_ai_compatible">✓ Compatible</string>
+    <string name="settings_ai_not_compatible">✗ RAM insuficiente</string>
+    <string name="settings_ai_recommended">★ Recomendado</string>
+    <string name="settings_watchlist_section">Valores por Defecto de Seguimiento</string>
+    <string name="settings_watchlist_interval">Intervalo de verificación por defecto</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_version">Versión %1$s</string>
+    <string name="settings_developer">NeoTurcios</string>
+    <string name="settings_oss_licenses">Licencias de Código Abierto</string>
+
+    <!-- AI Score -->
+    <string name="ai_score_format">Puntuación IA: %1$.1f/10</string>
+    <string name="ai_score_disabled">IA desactivada</string>
+    <string name="ai_feedback_s">Marca nivel S. Premium, corta y altamente memorable.</string>
+    <string name="ai_feedback_a">Fuerte potencial de marca. Buena memorabilidad y fluidez.</string>
+    <string name="ai_feedback_b">Comercialmente aceptable. Considera alternativas para mayor impacto.</string>
+    <string name="ai_feedback_c">Por debajo del promedio. Prueba el generador de nombres para mejores opciones.</string>
+    <string name="ai_feedback_d">Difícil de recordar. El generador puede ayudarte a encontrar mejores nombres.</string>
+
+    <!-- About -->
+    <string name="about_title">Acerca de OpenFind AI</string>
+    <string name="about_desc">OpenFind AI es una suite de inteligencia de dominios 100% local. Sin APIs de terceros, sin recolección de datos, sin rastreo.\n\nTodas las verificaciones de dominio usan resolución DNS directa y consultas WHOIS mediante sockets nativos. La evaluación de IA se ejecuta completamente en tu dispositivo.</string>
+    <string name="about_privacy">Privacidad Primero</string>
+    <string name="about_opensource">Código Abierto</string>
+
+    <!-- General -->
+    <string name="label_not_available">N/D</string>
+    <string name="label_yes">Sí</string>
+    <string name="label_no">No</string>
+    <string name="label_active">Activo</string>
+    <string name="label_inactive">Inactivo</string>
+    <string name="copied_to_clipboard">Copiado al portapapeles</string>
+    <string name="error_network">Error de red. Verifica tu conexión.</string>
+    <string name="error_invalid_domain">Formato de dominio inválido.</string>
+    <string name="error_unexpected">Ocurrió un error inesperado.</string>
+    <string name="storage_full_title">Almacenamiento Lleno</string>
+    <string name="storage_full_desc">Has alcanzado el límite de %1$d elementos. Elige una opción:</string>
+    <string name="storage_option_clear">Limpiar todo y guardar nuevo</string>
+    <string name="storage_option_auto">Auto-limpieza (eliminar más antiguos)</string>
+    <string name="domain_cleaned">%1$d elementos antiguos eliminados</string>
+</resources>

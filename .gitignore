@@ -19,3 +19,17 @@ dominios.txt
 .telegram_bot_config.json
 .telegram_bot_users.json
 .liberdom_config.json
+
+# Rust
+openfind-core/target/
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+*.iml
+.gradle/
+
+# jniLibs (built by CI/CD, not committed)
+android/app/src/main/jniLibs/

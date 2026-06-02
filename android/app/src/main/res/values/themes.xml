@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.OpenFind" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
+        <!-- Primary brand color -->
         <item name="colorPrimary">#00e676</item>
         <item name="colorOnPrimary">#070b13</item>
-        <!-- Secondary brand color. -->
+        <!-- Secondary brand color -->
         <item name="colorSecondary">#8b5cf6</item>
         <item name="colorOnSecondary">#ffffff</item>
-        <!-- Edge-to-edge: transparent system bars for SDK 35/36 -->
+        <!-- Tertiary / surface colors -->
+        <item name="colorPrimaryContainer">#1a00e676</item>
+        <item name="colorSecondaryContainer">#1a8b5cf6</item>
+        <item name="colorSurface">#0F172A</item>
+        <item name="colorOnSurface">#ffffff</item>
+        <item name="colorError">#ef4444</item>
+        <item name="colorOnError">#ffffff</item>
+        <!-- Edge-to-edge: transparent system bars -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
