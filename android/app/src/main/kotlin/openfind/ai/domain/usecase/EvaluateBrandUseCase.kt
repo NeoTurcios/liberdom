@@ -18,11 +18,7 @@ class EvaluateBrandUseCase(
             }
         } else {
             withContext(Dispatchers.Default) {
-                try {
-                    OpenfindNative.evaluateBrand(domain)
-                } catch (e: Exception) {
-                    heuristicEvaluate(domain)
-                }
+                OpenfindNative.evaluateBrandSafe(domain) ?: heuristicEvaluate(domain)
             }
         }
     }

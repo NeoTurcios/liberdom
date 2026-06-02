@@ -43,10 +43,8 @@ class WatchlistWorker(
 
         for (entity in needsCheck) {
             try {
-                val nativeResult = runCatching {
-                    OpenfindNative.checkDomain(entity.domain, false)
-                }.getOrElse {
-                    DomainResult(
+                val nativeResult = OpenfindNative.checkDomainSafe(entity.domain, false)
+                    ?: DomainResult(
                         domain = entity.domain,
                         status = DomainResult.STATUS_UNKNOWN,
                         detail = "Native engine unavailable",
@@ -58,8 +56,7 @@ class WatchlistWorker(
                         sslIssuer = null,
                         cloudflare = DomainResult.CLOUDFLARE_NONE,
                         nsServers = emptyList()
-                    )
-                }
+                )
 
                 watchlistRepository.updateStatus(entity.domain, nativeResult.status, System.currentTimeMillis())
 

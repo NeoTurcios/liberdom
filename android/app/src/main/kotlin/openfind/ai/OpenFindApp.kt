@@ -25,12 +25,16 @@ class OpenFindApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-
-        initKoin()
-        initNativeLibrary()
-        initWorkManager()
-        createNotificationChannels()
-        initAiIfEnabled()
+        try {
+            initKoin()
+            initNativeLibrary()
+            initWorkManager()
+            createNotificationChannels()
+            initAiIfEnabled()
+        } catch (e: Exception) {
+            android.util.Log.e("OpenFindApp", "Startup crash: ${e.message}", e)
+            throw e
+        }
     }
 
     private fun initKoin() {
@@ -51,11 +55,8 @@ class OpenFindApp : Application(), Configuration.Provider {
     }
 
     private fun initWorkManager() {
-        try {
-            WorkManager.initialize(this, workManagerConfiguration)
-        } catch (e: IllegalStateException) {
-            android.util.Log.w("OpenFindApp", "WorkManager already initialized")
-        }
+        // Configuration.Provider interface handles WorkManager init automatically.
+        // No need to call WorkManager.initialize() explicitly.
     }
 
     override val workManagerConfiguration: Configuration

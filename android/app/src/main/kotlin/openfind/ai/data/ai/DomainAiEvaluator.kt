@@ -36,11 +36,7 @@ class DomainAiEvaluator(private val context: Context) {
         return if (useAi && interpreter.isAiLoaded()) {
             interpreter.evaluateBrand(domain)
         } else {
-            try {
-                OpenfindNative.evaluateBrand(domain)
-            } catch (e: Exception) {
-                heuristicEvaluate(domain)
-            }
+            OpenfindNative.evaluateBrandSafe(domain) ?: heuristicEvaluate(domain)
         }
     }
 
