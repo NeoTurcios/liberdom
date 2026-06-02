@@ -42,7 +42,7 @@ jobs:
           ${{ runner.os }}-rust-
 
     - name: Install cargo-ndk
-      run: cargo install cargo-ndk --version 3.5.7
+      run: cargo install cargo-ndk
 
     - name: Install Android NDK
       run: |
