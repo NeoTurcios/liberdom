@@ -45,6 +45,7 @@ import openfind.ai.ui.theme.StatusAvailable
 import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
+import openfind.ai.ui.theme.White
 import openfind.ai.ui.utils.LocalLanguage
 import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.BulkViewModel
