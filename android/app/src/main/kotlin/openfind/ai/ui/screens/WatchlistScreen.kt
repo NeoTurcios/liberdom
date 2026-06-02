@@ -39,7 +39,6 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,20 +54,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import openfind.ai.data.local.entity.WatchlistEntity
+import openfind.ai.data.repository.SettingsRepository
 import openfind.ai.ui.components.DynamicIslandHeader
 import openfind.ai.ui.theme.DarkBackground
 import openfind.ai.ui.theme.DarkSurface
 import openfind.ai.ui.theme.DarkSurfaceVariant
 import openfind.ai.ui.theme.NeonGreen
-import openfind.ai.ui.theme.Purple
 import openfind.ai.ui.theme.StatusAvailable
 import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.StatusUnknown
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.WatchlistViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,6 +79,8 @@ fun WatchlistScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
+    val settingsRepository: SettingsRepository = koinInject()
     var showAddDialog by remember { mutableStateOf(false) }
 
     val availableIntervals = listOf(6, 12, 24, 48)
@@ -86,7 +90,7 @@ fun WatchlistScreen(
             onDismissRequest = { showAddDialog = false },
             title = {
                 Text(
-                    "Add Domain",
+                    text = Translations.string("watchlist_add_domain", lang),
                     color = White,
                     fontWeight = FontWeight.Bold
                 )
@@ -98,7 +102,7 @@ fun WatchlistScreen(
                         onValueChange = { viewModel.onNewDomainInputChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("example.com", color = TextSecondary)
+                            Text(Translations.string("watchlist_placeholder_domain", lang), color = TextSecondary)
                         },
                         singleLine = true,
                         textStyle = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(color = White),
@@ -118,7 +122,7 @@ fun WatchlistScreen(
                         onValueChange = { viewModel.onNewLabelInputChange(it) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("Label (optional)", color = TextSecondary)
+                            Text(if (lang == "es") "Etiqueta (opcional)" else "Label (optional)", color = TextSecondary)
                         },
                         singleLine = true,
                         textStyle = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(color = White),
@@ -134,7 +138,7 @@ fun WatchlistScreen(
                     Spacer(Modifier.height(16.dp))
 
                     Text(
-                        text = "Check Interval",
+                        text = Translations.string("watchlist_interval", lang),
                         color = TextPrimary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
@@ -173,7 +177,7 @@ fun WatchlistScreen(
                     enabled = state.newDomainInput.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(containerColor = NeonGreen)
                 ) {
-                    Text("Add", color = DarkBackground, fontWeight = FontWeight.Bold)
+                    Text(Translations.string("watchlist_add_btn", lang), color = DarkBackground, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -181,7 +185,7 @@ fun WatchlistScreen(
                     onClick = { showAddDialog = false },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(Translations.string("watchlist_cancel_btn", lang), color = TextSecondary)
                 }
             },
             containerColor = DarkSurface,
@@ -202,8 +206,11 @@ fun WatchlistScreen(
             DynamicIslandHeader(
                 isScanning = false,
                 scanningDomain = "",
-                currentLanguage = "EN",
-                onToggleLanguage = {},
+                currentLanguage = lang,
+                onToggleLanguage = {
+                    val newLang = if (lang == "es") "en" else "es"
+                    settingsRepository.setLanguage(newLang)
+                },
                 onSettingsClick = onNavigateToSettings,
                 onTitleClick = {}
             )
@@ -211,7 +218,7 @@ fun WatchlistScreen(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = "Domain Watchlist",
+                text = Translations.string("watchlist_title", lang),
                 color = TextPrimary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -227,7 +234,7 @@ fun WatchlistScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Add domains to monitor. We'll notify you when they become available.",
+                        text = Translations.string("watchlist_empty", lang),
                         color = TextSecondary,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
@@ -275,6 +282,7 @@ private fun WatchlistItemCard(
     onToggleNotify: () -> Unit,
     onChangeInterval: (Int) -> Unit
 ) {
+    val lang = LocalLanguage.current
     val intervals = listOf(6, 12, 24, 48)
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
@@ -355,13 +363,13 @@ private fun WatchlistItemCard(
                         else -> StatusUnknown
                     }
                     val statusLabel = when (status) {
-                        "available" -> "Available"
-                        "taken" -> "Taken"
-                        else -> "Unknown"
+                        "available" -> Translations.string("status_available", lang)
+                        "taken" -> Translations.string("status_taken", lang)
+                        else -> Translations.string("status_unknown", lang)
                     }
 
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Last Status:", color = TextSecondary, fontSize = 11.sp)
+                        Text(if (lang == "es") "Último Estado:" else "Last Status:", color = TextSecondary, fontSize = 11.sp)
                         Spacer(Modifier.width(6.dp))
                         Text(
                             text = statusLabel,
@@ -377,8 +385,9 @@ private fun WatchlistItemCard(
 
                 item.lastChecked?.let { timestamp ->
                     Spacer(Modifier.height(4.dp))
+                    val lastCheckedLabel = if (lang == "es") "Última comprobación" else "Last checked"
                     Text(
-                        text = "Last checked: ${java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault())
+                        text = "$lastCheckedLabel: ${java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.getDefault())
                             .format(java.util.Date(timestamp))}",
                         color = TextSecondary.copy(alpha = 0.6f),
                         fontSize = 10.sp

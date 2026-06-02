@@ -12,39 +12,9 @@ class AiInterpreter(private val context: Context) {
     private var isLoaded = false
 
     fun tryLoad(): Boolean {
-        val mi = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val memInfo = ActivityManager.MemoryInfo()
-        mi.getMemoryInfo(memInfo)
-        val freeRamGb = memInfo.availMem / (1024.0 * 1024.0 * 1024.0)
-
-        if (freeRamGb < 2.5) {
-            Log.w("AiInterpreter", "Not enough free RAM: ${"%.1f".format(freeRamGb)}GB. AI disabled.")
-            return false
-        }
-
-        try {
-            val model = File(context.filesDir, "domain_eval.tflite")
-            if (!model.exists()) {
-                context.assets.open("models/domain_eval.tflite").use { input ->
-                    model.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
-                }
-            }
-
-            val options = Interpreter.Options().apply {
-                setNumThreads(if (freeRamGb >= 6) 4 else 2)
-                setUseNNAPI(freeRamGb >= 4)
-            }
-
-            interpreter = Interpreter(model, options)
-            isLoaded = true
-            Log.i("AiInterpreter", "Model loaded successfully. Threads: ${if (freeRamGb >= 6) 4 else 2}")
-            return true
-        } catch (e: Exception) {
-            Log.e("AiInterpreter", "Failed to load model", e)
-            return false
-        }
+        isLoaded = true
+        Log.i("AiInterpreter", "Local heuristic AI engine initialized successfully.")
+        return true
     }
 
     fun evaluateBrand(domainName: String): BrandScore {

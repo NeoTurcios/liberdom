@@ -29,7 +29,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Tab
@@ -42,7 +41,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,22 +54,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import openfind.ai.data.local.entity.HistoryEntity
-import openfind.ai.data.local.entity.SavedEntity
-import openfind.ai.domain.model.DomainResult
+import openfind.ai.data.repository.SettingsRepository
 import openfind.ai.ui.components.DynamicIslandHeader
 import openfind.ai.ui.theme.DarkBackground
 import openfind.ai.ui.theme.DarkSurface
 import openfind.ai.ui.theme.DarkSurfaceVariant
 import openfind.ai.ui.theme.NeonGreen
-import openfind.ai.ui.theme.Purple
 import openfind.ai.ui.theme.StatusAvailable
 import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.StatusUnknown
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.LibraryViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,6 +80,8 @@ fun LibraryScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
+    val settingsRepository: SettingsRepository = koinInject()
     var showClearDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -92,7 +93,7 @@ fun LibraryScreen(
             onDismissRequest = { showClearDialog = false },
             title = {
                 Text(
-                    "Confirm deletion",
+                    text = Translations.string("library_confirm_title", lang),
                     color = White,
                     fontWeight = FontWeight.Bold
                 )
@@ -100,9 +101,9 @@ fun LibraryScreen(
             text = {
                 Text(
                     text = if (state.tabMode == "saved")
-                        "Are you sure you want to clear all saved domains?"
+                        Translations.string("library_confirm_msg_saved", lang)
                     else
-                        "Are you sure you want to clear all search history?",
+                        Translations.string("library_confirm_msg_history", lang),
                     color = TextSecondary
                 )
             },
@@ -114,7 +115,7 @@ fun LibraryScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = StatusTaken)
                 ) {
-                    Text("Clear All", color = White)
+                    Text(Translations.string("library_confirm_btn", lang), color = White)
                 }
             },
             dismissButton = {
@@ -122,7 +123,7 @@ fun LibraryScreen(
                     onClick = { showClearDialog = false },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(Translations.string("library_cancel_btn", lang), color = TextSecondary)
                 }
             },
             containerColor = DarkSurface,
@@ -143,8 +144,11 @@ fun LibraryScreen(
             DynamicIslandHeader(
                 isScanning = false,
                 scanningDomain = "",
-                currentLanguage = "EN",
-                onToggleLanguage = {},
+                currentLanguage = lang,
+                onToggleLanguage = {
+                    val newLang = if (lang == "es") "en" else "es"
+                    settingsRepository.setLanguage(newLang)
+                },
                 onSettingsClick = onNavigateToSettings,
                 onTitleClick = {}
             )
@@ -152,7 +156,7 @@ fun LibraryScreen(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = "My Library",
+                text = Translations.string("library_title", lang),
                 color = TextPrimary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -168,7 +172,7 @@ fun LibraryScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "${state.itemCount} domains",
+                    text = if (lang == "es") "${state.itemCount} dominios" else "${state.itemCount} domains",
                     color = TextSecondary,
                     fontSize = 12.sp
                 )
@@ -187,7 +191,7 @@ fun LibraryScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(Modifier.width(4.dp))
-                        Text("Clear All", color = StatusTaken, fontSize = 12.sp)
+                        Text(Translations.string("library_btn_clear", lang), color = StatusTaken, fontSize = 12.sp)
                     }
                 }
             }
@@ -210,7 +214,7 @@ fun LibraryScreen(
                     onClick = { viewModel.onTabChange(0) },
                     text = {
                         Text(
-                            "Saved",
+                            text = Translations.string("library_tab_saved", lang),
                             color = if (state.tabIndex == 0) NeonGreen else TextSecondary,
                             fontWeight = if (state.tabIndex == 0) FontWeight.Bold else FontWeight.Normal
                         )
@@ -221,7 +225,7 @@ fun LibraryScreen(
                     onClick = { viewModel.onTabChange(1) },
                     text = {
                         Text(
-                            "History",
+                            text = Translations.string("library_tab_history", lang),
                             color = if (state.tabIndex == 1) NeonGreen else TextSecondary,
                             fontWeight = if (state.tabIndex == 1) FontWeight.Bold else FontWeight.Normal
                         )
@@ -244,10 +248,7 @@ fun LibraryScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (state.tabMode == "saved")
-                            "No saved domains yet. Save results from search to build your collection."
-                        else
-                            "No search history yet. Your recent searches will appear here.",
+                        text = Translations.string("library_empty", lang),
                         color = TextSecondary,
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center
@@ -309,6 +310,7 @@ private fun SwipeableLibraryItem(
     onPdf: () -> Unit,
     onShare: () -> Unit
 ) {
+    val lang = LocalLanguage.current
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
             if (value == SwipeToDismissBoxValue.EndToStart) {
@@ -360,9 +362,9 @@ private fun SwipeableLibraryItem(
                         else -> StatusUnknown
                     }
                     val statusLabel = when (status) {
-                        "available" -> "Available"
-                        "taken" -> "Taken"
-                        else -> "Unknown"
+                        "available" -> Translations.string("status_available", lang)
+                        "taken" -> Translations.string("status_taken", lang)
+                        else -> Translations.string("status_unknown", lang)
                     }
                     Text(
                         text = statusLabel,
@@ -377,8 +379,14 @@ private fun SwipeableLibraryItem(
 
                 Spacer(Modifier.height(8.dp))
 
+                val detailText = when (status) {
+                    "available" -> Translations.string("detail_available", lang)
+                    "taken" -> Translations.string("detail_taken", lang)
+                    else -> Translations.string("detail_unknown", lang)
+                }
+
                 Text(
-                    text = detail,
+                    text = detailText,
                     color = TextSecondary,
                     fontSize = 12.sp,
                     maxLines = 1,

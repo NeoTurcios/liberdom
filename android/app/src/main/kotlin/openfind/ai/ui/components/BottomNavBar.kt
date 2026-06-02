@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import openfind.ai.ui.theme.DarkSurface
 import openfind.ai.ui.theme.NeonGreen
 import openfind.ai.ui.theme.TextSecondary
+import openfind.ai.ui.utils.LocalLanguage
 
 data class BottomNavItem(
     val route: String,
@@ -51,6 +52,8 @@ fun BottomNavBar(
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val lang = LocalLanguage.current
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -73,6 +76,16 @@ fun BottomNavBar(
             bottomNavItems.forEach { item ->
                 val isSelected = currentRoute == item.route
                 val color = if (isSelected) NeonGreen else TextSecondary
+                
+                val label = when (item.route) {
+                    "search" -> if (lang == "es") "Buscar" else "Search"
+                    "bulk" -> if (lang == "es") "Lote" else "Bulk"
+                    "generator" -> if (lang == "es") "Generador" else "Generator"
+                    "library" -> if (lang == "es") "Biblioteca" else "Library"
+                    "watchlist" -> if (lang == "es") "Seguimiento" else "Watchlist"
+                    else -> item.label
+                }
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -87,12 +100,12 @@ fun BottomNavBar(
                     ) {
                         Icon(
                             imageVector = item.icon,
-                            contentDescription = item.label,
+                            contentDescription = label,
                             tint = color,
                             modifier = Modifier.size(22.dp)
                         )
                         Text(
-                            text = item.label,
+                            text = label,
                             color = color,
                             fontSize = 10.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal

@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import openfind.ai.data.repository.SettingsRepository
 import openfind.ai.ui.components.DomainResultCard
 import openfind.ai.ui.components.DynamicIslandHeader
 import openfind.ai.ui.theme.DarkBackground
@@ -46,9 +45,11 @@ import openfind.ai.ui.theme.StatusAvailable
 import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
-import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.BulkViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun BulkScreen(
@@ -56,6 +57,8 @@ fun BulkScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
+    val settingsRepository: SettingsRepository = koinInject()
     val listState = rememberLazyListState()
 
     LaunchedEffect(state.results.size) {
@@ -77,8 +80,11 @@ fun BulkScreen(
             DynamicIslandHeader(
                 isScanning = state.isRunning,
                 scanningDomain = "",
-                currentLanguage = "EN",
-                onToggleLanguage = {},
+                currentLanguage = lang,
+                onToggleLanguage = {
+                    val newLang = if (lang == "es") "en" else "es"
+                    settingsRepository.setLanguage(newLang)
+                },
                 onSettingsClick = onNavigateToSettings,
                 onTitleClick = {}
             )
@@ -86,7 +92,7 @@ fun BulkScreen(
             Spacer(Modifier.height(20.dp))
 
             Text(
-                text = "Bulk Domain Check",
+                text = Translations.string("bulk_title", lang),
                 color = TextPrimary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -97,7 +103,7 @@ fun BulkScreen(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Check multiple domains, write one per line.",
+                text = Translations.string("bulk_subtitle", lang),
                 color = TextSecondary,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -114,7 +120,7 @@ fun BulkScreen(
                     .height(140.dp),
                 placeholder = {
                     Text(
-                        text = "domain.com\nexample.org\nmybrand.io",
+                        text = Translations.string("bulk_placeholder", lang),
                         color = TextSecondary
                     )
                 },
@@ -151,7 +157,7 @@ fun BulkScreen(
                     )
                 } else {
                     Text(
-                        text = "Scan Bulk Domains",
+                        text = Translations.string("bulk_btn", lang),
                         color = DarkBackground,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
@@ -170,9 +176,9 @@ fun BulkScreen(
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    StatItem("Checked", "${state.stats.checked}/${state.stats.total}", TextSecondary)
-                    StatItem("Free", "${state.stats.free}", StatusAvailable)
-                    StatItem("Taken", "${state.stats.taken}", StatusTaken)
+                    StatItem(if (lang == "es") "Revisados" else "Checked", "${state.stats.checked}/${state.stats.total}", TextSecondary)
+                    StatItem(if (lang == "es") "Libres" else "Free", "${state.stats.free}", StatusAvailable)
+                    StatItem(if (lang == "es") "Ocupados" else "Taken", "${state.stats.taken}", StatusTaken)
                 }
 
                 if (state.isRunning) {
@@ -199,7 +205,7 @@ fun BulkScreen(
                     ),
                     shape = RoundedCornerShape(14.dp)
                 ) {
-                    Text("Clear Results", color = TextSecondary, fontSize = 13.sp)
+                    Text(Translations.string("library_btn_clear", lang), color = TextSecondary, fontSize = 13.sp)
                 }
             }
 

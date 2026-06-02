@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -30,7 +31,7 @@ import openfind.ai.ui.theme.DarkSurfaceVariant
 import openfind.ai.ui.theme.NeonGreen
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
-import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
 
 @Composable
 fun DynamicIslandHeader(
@@ -42,6 +43,8 @@ fun DynamicIslandHeader(
     onTitleClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val lang = LocalLanguage.current
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -58,9 +61,11 @@ fun DynamicIslandHeader(
                 modifier = Modifier.clickable { onTitleClick() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "⚡",
-                    fontSize = 18.sp
+                Icon(
+                    imageVector = Icons.Default.Bolt,
+                    contentDescription = null,
+                    tint = NeonGreen,
+                    modifier = Modifier.size(22.dp)
                 )
                 androidx.compose.foundation.layout.Spacer(Modifier.width(8.dp))
                 Text(
@@ -77,7 +82,7 @@ fun DynamicIslandHeader(
                 exit = fadeOut()
             ) {
                 Text(
-                    text = "Scanning: $scanningDomain...",
+                    text = if (lang == "es") "Buscando: $scanningDomain..." else "Scanning: $scanningDomain...",
                     color = NeonGreen,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium

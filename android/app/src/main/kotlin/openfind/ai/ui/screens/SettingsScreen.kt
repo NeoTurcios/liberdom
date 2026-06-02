@@ -1,6 +1,7 @@
 package openfind.ai.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,26 +15,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Psychology
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Switch
@@ -60,10 +59,11 @@ import openfind.ai.ui.theme.DarkSurface
 import openfind.ai.ui.theme.DarkSurfaceVariant
 import openfind.ai.ui.theme.NeonGreen
 import openfind.ai.ui.theme.Purple
-import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -74,6 +74,7 @@ fun SettingsScreen(
     onNavigateBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
     var showAiDialog by remember { mutableStateOf(false) }
 
     if (showAiDialog) {
@@ -81,14 +82,14 @@ fun SettingsScreen(
             onDismissRequest = { showAiDialog = false },
             title = {
                 Text(
-                    "Enable AI Assistant",
+                    text = Translations.string("ai_dialog_title", lang),
                     color = White,
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
-                    "AI assistant requires downloading a ~15MB model. Continue?",
+                    text = Translations.string("ai_dialog_text", lang),
                     color = TextSecondary
                 )
             },
@@ -100,7 +101,7 @@ fun SettingsScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Purple)
                 ) {
-                    Text("Continue", color = White, fontWeight = FontWeight.Bold)
+                    Text(Translations.string("ai_dialog_confirm", lang), color = White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -108,7 +109,7 @@ fun SettingsScreen(
                     onClick = { showAiDialog = false },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
-                    Text("Cancel", color = TextSecondary)
+                    Text(Translations.string("ai_dialog_cancel", lang), color = TextSecondary)
                 }
             },
             containerColor = DarkSurface,
@@ -130,7 +131,7 @@ fun SettingsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Settings",
+                        text = Translations.string("settings_title", lang),
                         color = TextPrimary,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
@@ -140,7 +141,7 @@ fun SettingsScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = Translations.string("back", lang),
                             tint = TextPrimary
                         )
                     }
@@ -152,7 +153,7 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            SectionHeader(icon = Icons.Default.Language, title = "Language")
+            SectionHeader(icon = Icons.Default.Language, title = Translations.string("settings_section_lang", lang))
 
             Spacer(Modifier.height(8.dp))
 
@@ -170,14 +171,14 @@ fun SettingsScreen(
                 ) {
                     LanguageOption(
                         label = "Español",
-                        flag = "\uD83C\uDDEA\uD83C\uDDF8",
-                        selected = state.language == "es",
+                        flag = "ES",
+                        selected = lang == "es",
                         onClick = { viewModel.onChangeLanguage("es") }
                     )
                     LanguageOption(
                         label = "English",
-                        flag = "\uD83C\uDDFA\uD83C\uDDF8",
-                        selected = state.language == "en",
+                        flag = "EN",
+                        selected = lang == "en",
                         onClick = { viewModel.onChangeLanguage("en") }
                     )
                 }
@@ -185,7 +186,7 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            SectionHeader(icon = Icons.Default.Psychology, title = "AI Assistant")
+            SectionHeader(icon = Icons.Default.Psychology, title = Translations.string("settings_section_ai", lang))
 
             Spacer(Modifier.height(8.dp))
 
@@ -201,42 +202,82 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Enable AI",
+                            text = Translations.string("settings_enable_ai", lang),
                             color = TextPrimary,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        Switch(
-                            checked = state.isAiEnabled,
-                            onCheckedChange = { enabled ->
-                                if (enabled) {
-                                    showAiDialog = true
-                                } else {
-                                    viewModel.onToggleAi(false)
-                                }
-                            },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = White,
-                                checkedTrackColor = Purple,
-                                uncheckedThumbColor = TextSecondary,
-                                uncheckedTrackColor = TextSecondary.copy(alpha = 0.2f)
+                        if (state.aiLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = Purple,
+                                strokeWidth = 2.dp
                             )
-                        )
+                        } else {
+                            Switch(
+                                checked = state.isAiEnabled,
+                                onCheckedChange = { enabled ->
+                                    if (enabled) {
+                                        showAiDialog = true
+                                    } else {
+                                        viewModel.onToggleAi(false)
+                                    }
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = White,
+                                    checkedTrackColor = Purple,
+                                    uncheckedThumbColor = TextSecondary,
+                                    uncheckedTrackColor = TextSecondary.copy(alpha = 0.2f)
+                                )
+                            )
+                        }
                     }
 
-                    if (!state.isAiEnabled) {
+                    if (state.aiLoading) {
+                        Spacer(Modifier.height(12.dp))
+                        Column {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = Translations.string("ai_downloading", lang),
+                                    color = TextSecondary,
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    text = "${(state.aiProgress * 100).toInt()}%",
+                                    color = Purple,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Spacer(Modifier.height(6.dp))
+                            androidx.compose.material3.LinearProgressIndicator(
+                                progress = { state.aiProgress },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(6.dp)
+                                    .clip(RoundedCornerShape(3.dp)),
+                                color = Purple,
+                                trackColor = DarkBackground
+                            )
+                        }
+                    }
+
+                    if (!state.isAiEnabled && !state.aiLoading) {
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "AI is disabled. Enable for smart brand evaluation.",
+                            text = Translations.string("settings_ai_desc_disabled", lang),
                             color = TextSecondary,
                             fontSize = 12.sp
                         )
                     }
 
-                    if (state.isAiEnabled) {
+                    if (state.isAiEnabled && !state.aiLoading) {
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = "Requires ~20MB additional storage. Recommended for high-end devices.",
+                            text = Translations.string("settings_ai_desc_enabled", lang),
                             color = TextSecondary.copy(alpha = 0.7f),
                             fontSize = 11.sp
                         )
@@ -246,7 +287,7 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            SectionHeader(icon = Icons.Default.Notifications, title = "Watchlist Defaults")
+            SectionHeader(icon = Icons.Default.Notifications, title = Translations.string("settings_watchlist", lang))
 
             Spacer(Modifier.height(8.dp))
 
@@ -257,7 +298,7 @@ fun SettingsScreen(
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
-                        text = "Default Check Interval",
+                        text = Translations.string("settings_interval", lang),
                         color = TextPrimary,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Medium
@@ -285,7 +326,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Notifications",
+                            text = Translations.string("settings_notifications", lang),
                             color = TextPrimary,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Medium
@@ -306,7 +347,7 @@ fun SettingsScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            SectionHeader(icon = Icons.Default.Info, title = "About")
+            SectionHeader(icon = Icons.Default.Info, title = Translations.string("settings_about", lang))
 
             Spacer(Modifier.height(8.dp))
 
@@ -336,8 +377,9 @@ fun SettingsScreen(
                         fontSize = 13.sp
                     )
                     Spacer(Modifier.height(4.dp))
+                    val licenseLabel = if (lang == "es") "Licencia No Comercial \u00A9 2026" else "Non-Commercial License \u00A9 2026"
                     Text(
-                        text = "Non-Commercial License \u00A9 2026",
+                        text = licenseLabel,
                         color = TextSecondary,
                         fontSize = 13.sp
                     )
@@ -352,7 +394,7 @@ fun SettingsScreen(
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Text(
-                            "Open Source Licenses",
+                            text = Translations.string("settings_licenses", lang),
                             color = TextSecondary,
                             fontSize = 13.sp
                         )
@@ -361,7 +403,7 @@ fun SettingsScreen(
                     Spacer(Modifier.height(8.dp))
 
                     Text(
-                        text = "Next-generation intelligent name generator and domain search. Operates 100% locally.",
+                        text = Translations.string("settings_about_desc", lang),
                         color = TextSecondary.copy(alpha = 0.6f),
                         fontSize = 11.sp,
                         lineHeight = 16.sp
@@ -405,8 +447,26 @@ private fun LanguageOption(label: String, flag: String, selected: Boolean, onCli
             )
         )
         Spacer(Modifier.height(4.dp))
-        Text(text = flag, fontSize = 24.sp)
-        Spacer(Modifier.height(2.dp))
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .background(if (selected) NeonGreen.copy(alpha = 0.15f) else DarkSurface)
+                .border(
+                    width = 1.dp,
+                    color = if (selected) NeonGreen else TextSecondary.copy(alpha = 0.3f),
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = flag,
+                color = if (selected) NeonGreen else TextPrimary,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(Modifier.height(6.dp))
         Text(text = label, color = TextPrimary, fontSize = 12.sp)
     }
 }

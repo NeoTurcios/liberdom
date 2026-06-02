@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -51,6 +50,8 @@ import openfind.ai.ui.theme.TakenBg
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 
 @Composable
 fun DomainResultCard(
@@ -63,6 +64,7 @@ fun DomainResultCard(
     isAiEnabled: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val lang = LocalLanguage.current
     var expanded by remember { mutableStateOf(false) }
 
     val statusColor = when (result.status) {
@@ -78,9 +80,15 @@ fun DomainResultCard(
     }
 
     val statusLabel = when (result.status) {
-        "available" -> "Available"
-        "taken" -> "Taken"
-        else -> "Unknown"
+        "available" -> Translations.string("status_available", lang)
+        "taken" -> Translations.string("status_taken", lang)
+        else -> Translations.string("status_unknown", lang)
+    }
+
+    val detailText = when (result.status) {
+        "available" -> Translations.string("detail_available", lang)
+        "taken" -> Translations.string("detail_taken", lang)
+        else -> Translations.string("detail_unknown", lang)
     }
 
     Card(
@@ -106,7 +114,7 @@ fun DomainResultCard(
                 Text(
                     text = statusLabel,
                     color = statusColor,
-                    fontSize = 11.sp,
+                    fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .background(statusBg, RoundedCornerShape(8.dp))
@@ -121,7 +129,7 @@ fun DomainResultCard(
 
             Spacer(Modifier.height(8.dp))
             Text(
-                text = result.detail,
+                text = detailText,
                 color = TextSecondary,
                 fontSize = 13.sp,
                 maxLines = 2,
@@ -136,14 +144,14 @@ fun DomainResultCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Technical Details",
+                    text = Translations.string("result_card_tech", lang),
                     color = TextSecondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Spacer(Modifier.weight(1f))
                 Text(
-                    text = if (expanded) "\u25B2" else "\u25BC",
+                    text = if (expanded) "▲" else "▼",
                     color = TextSecondary,
                     fontSize = 12.sp
                 )
@@ -152,41 +160,46 @@ fun DomainResultCard(
             AnimatedVisibility(
                 visible = expanded,
                 enter = expandVertically(),
-                exit = shrinkVertically()
+                exit = shrinkVertically
             ) {
                 Column {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                     if (!result.ip.isNullOrEmpty()) {
-                        DetailRow("Server IP:", result.ip)
+                        DetailRow(Translations.string("result_card_ip", lang), result.ip)
                     }
                     if (!result.registrar.isNullOrEmpty()) {
-                        DetailRow("Registrar:", result.registrar)
+                        DetailRow(Translations.string("result_card_registrar", lang), result.registrar)
                     }
                     if (!result.creationDate.isNullOrEmpty()) {
-                        DetailRow("Creation Date:", result.creationDate)
+                        DetailRow(Translations.string("result_card_created", lang), result.creationDate)
                     }
-                    DetailRow("Detection Method:", result.method)
+                    DetailRow(Translations.string("result_card_method", lang), result.method)
 
                     if (result.sslActive) {
-                        DetailRow("SSL Status:", "Active", StatusAvailable)
+                        val activeLabel = if (lang == "es") "Activo" else "Active"
+                        DetailRow(Translations.string("result_card_ssl", lang), activeLabel, StatusAvailable)
                         if (!result.sslIssuer.isNullOrEmpty()) {
-                            DetailRow("SSL Issuer:", result.sslIssuer)
+                            DetailRow(Translations.string("result_card_ssl_issuer", lang), result.sslIssuer)
                         }
                     }
 
                     if (result.cloudflare != "none") {
                         val cfColor = if (result.cloudflare == "orange") CloudflareOrange else CloudflareGray
-                        val cfLabel = if (result.cloudflare == "orange") "Orange Cloud (Proxy active)" else "Gray Cloud (DNS only)"
-                        DetailRow("Cloudflare:", cfLabel, cfColor)
+                        val cfLabel = if (lang == "es") {
+                            if (result.cloudflare == "orange") "Nube Naranja (Proxy activo)" else "Nube Gris (Solo DNS)"
+                        } else {
+                            if (result.cloudflare == "orange") "Orange Cloud (Proxy active)" else "Gray Cloud (DNS only)"
+                        }
+                        DetailRow(Translations.string("result_card_cloudflare", lang), cfLabel, cfColor)
                     }
 
                     if (result.nsServers.isNotEmpty()) {
-                        DetailRow("Name Servers:", result.nsServers.take(3).joinToString(", "))
+                        DetailRow(Translations.string("result_card_ns", lang), result.nsServers.take(3).joinToString(", "))
                     }
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -241,7 +254,7 @@ private fun DetailRow(label: String, value: String, valueColor: Color = TextSeco
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium
         )
-        Spacer(Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = value,
             color = valueColor,

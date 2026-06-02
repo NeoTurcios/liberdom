@@ -49,6 +49,8 @@ import openfind.ai.ui.theme.Purple
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.SearchViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -60,6 +62,7 @@ fun SearchScreen(
     onNavigateToAbout: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
 
     LaunchedEffect(navController) {
         val prefillDomain = navController
@@ -96,7 +99,7 @@ fun SearchScreen(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = "Find your next domain",
+                text = Translations.string("search_title", lang),
                 color = TextPrimary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -107,7 +110,7 @@ fun SearchScreen(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Low-level direct and hybrid DNS/WHOIS search without intermediaries or premium fees.",
+                text = Translations.string("search_subtitle", lang),
                 color = TextSecondary,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -120,7 +123,7 @@ fun SearchScreen(
                 value = state.domainInput,
                 onValueChange = { viewModel.onDomainInputChange(it) },
                 onSearch = { viewModel.onSearch() },
-                placeholder = "Search domain..."
+                placeholder = Translations.string("search_placeholder", lang)
             )
 
             Spacer(Modifier.height(16.dp))
@@ -139,7 +142,7 @@ fun SearchScreen(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "Advanced Audit",
+                        text = Translations.string("advanced_audit", lang),
                         color = TextPrimary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
@@ -184,7 +187,7 @@ fun SearchScreen(
                     )
                 } else {
                     Text(
-                        text = "Check Domain",
+                        text = Translations.string("search_btn", lang),
                         color = DarkBackground,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
@@ -221,7 +224,7 @@ fun SearchScreen(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = "Designed with love and open source\nDeveloped by neopunto.com\nContact: hola@neopunto.com | Non-Commercial License \u00A9 2026",
+                text = Translations.string("designed_with_love", lang),
                 color = TextSecondary.copy(alpha = 0.5f),
                 fontSize = 11.sp,
                 textAlign = TextAlign.Center,

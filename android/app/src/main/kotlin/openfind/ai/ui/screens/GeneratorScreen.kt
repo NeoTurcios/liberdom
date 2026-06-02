@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import openfind.ai.data.repository.SettingsRepository
 import openfind.ai.ui.components.AIScoreBadge
 import openfind.ai.ui.components.DynamicIslandHeader
 import openfind.ai.ui.theme.DarkBackground
@@ -51,8 +52,11 @@ import openfind.ai.ui.theme.StatusTaken
 import openfind.ai.ui.theme.TextPrimary
 import openfind.ai.ui.theme.TextSecondary
 import openfind.ai.ui.theme.White
+import openfind.ai.ui.utils.LocalLanguage
+import openfind.ai.ui.utils.Translations
 import openfind.ai.viewmodel.GeneratorViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -61,6 +65,8 @@ fun GeneratorScreen(
     onNavigateToSettings: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val lang = LocalLanguage.current
+    val settingsRepository: SettingsRepository = koinInject()
 
     Box(
         modifier = Modifier
@@ -75,8 +81,11 @@ fun GeneratorScreen(
             DynamicIslandHeader(
                 isScanning = state.isChecking,
                 scanningDomain = "",
-                currentLanguage = "EN",
-                onToggleLanguage = {},
+                currentLanguage = lang,
+                onToggleLanguage = {
+                    val newLang = if (lang == "es") "en" else "es"
+                    settingsRepository.setLanguage(newLang)
+                },
                 onSettingsClick = onNavigateToSettings,
                 onTitleClick = {}
             )
@@ -84,7 +93,7 @@ fun GeneratorScreen(
             Spacer(Modifier.height(20.dp))
 
             Text(
-                text = "Creative Generator",
+                text = Translations.string("generator_title", lang),
                 color = TextPrimary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -95,7 +104,7 @@ fun GeneratorScreen(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "Enter a keyword to generate unique brand concepts.",
+                text = Translations.string("generator_subtitle", lang),
                 color = TextSecondary,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -110,7 +119,7 @@ fun GeneratorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "e.g. tech, cloud, smart, medita",
+                        text = Translations.string("generator_placeholder", lang),
                         color = TextSecondary
                     )
                 },
@@ -128,7 +137,7 @@ fun GeneratorScreen(
             Spacer(Modifier.height(16.dp))
 
             Text(
-                text = "Extensions to check:",
+                text = Translations.string("generator_tlds", lang),
                 color = TextPrimary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium
@@ -175,7 +184,7 @@ fun GeneratorScreen(
                     )
                 } else {
                     Text(
-                        text = "Generate Names",
+                        text = Translations.string("generator_btn", lang),
                         color = DarkBackground,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
@@ -207,6 +216,8 @@ private fun GeneratorItemCard(
     onCheck: () -> Unit,
     isAiEnabled: Boolean = false
 ) {
+    val lang = LocalLanguage.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -229,7 +240,11 @@ private fun GeneratorItemCard(
 
             if (item.status != null) {
                 val color = if (item.status == "available") StatusAvailable else StatusTaken
-                val label = if (item.status == "available") "Available" else "Taken"
+                val label = if (item.status == "available") {
+                    Translations.string("status_available", lang)
+                } else {
+                    Translations.string("status_taken", lang)
+                }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = label,
@@ -255,7 +270,7 @@ private fun GeneratorItemCard(
                     shape = RoundedCornerShape(10.dp)
                 ) {
                     Text(
-                        text = "Check",
+                        text = if (lang == "es") "Verificar" else "Check",
                         color = DarkBackground,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold

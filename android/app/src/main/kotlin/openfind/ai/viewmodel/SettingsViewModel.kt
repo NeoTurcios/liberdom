@@ -24,7 +24,8 @@ data class SettingsState(
     val androidVersion: String = "",
     val aiLoading: Boolean = false,
     val aiLoadError: String? = null,
-    val aiLoadSuccess: Boolean = false
+    val aiLoadSuccess: Boolean = false,
+    val aiProgress: Float = 0f
 )
 
 class SettingsViewModel(
@@ -48,13 +49,19 @@ class SettingsViewModel(
 
     fun onToggleAi(enabled: Boolean) {
         if (enabled) {
-            _state.update { it.copy(aiLoading = true, aiLoadError = null, aiLoadSuccess = false) }
+            _state.update { it.copy(aiLoading = true, aiProgress = 0f, aiLoadError = null, aiLoadSuccess = false) }
             viewModelScope.launch {
-                withContext(Dispatchers.IO) {
+                // Simulate model download progress beautifully over ~3 seconds
+                for (p in 1..100) {
+                    kotlinx.coroutines.delay(30)
+                    _state.update { it.copy(aiProgress = p / 100f) }
+                }
+
+                val success = withContext(Dispatchers.IO) {
                     domainAiEvaluator.tryEnableAi()
                 }
-                val info = domainAiEvaluator.modelInfo
-                if (info.isLoaded) {
+
+                if (success) {
                     settingsRepository.setAiEnabled(true)
                     _state.update { it.copy(isAiEnabled = true, aiLoading = false, aiLoadSuccess = true) }
                 } else {
@@ -63,7 +70,7 @@ class SettingsViewModel(
                         it.copy(
                             isAiEnabled = false,
                             aiLoading = false,
-                            aiLoadError = if (info.isCompatible) "Failed to load model" else "Insufficient RAM (need 2.5+ GB free)"
+                            aiLoadError = "Failed to load model"
                         )
                     }
                 }
@@ -71,7 +78,7 @@ class SettingsViewModel(
         } else {
             domainAiEvaluator.disableAi()
             settingsRepository.setAiEnabled(false)
-            _state.update { it.copy(isAiEnabled = false, aiLoading = false, aiLoadError = null) }
+            _state.update { it.copy(isAiEnabled = false, aiLoading = false, aiLoadError = null, aiProgress = 0f) }
         }
     }
 
